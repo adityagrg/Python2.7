@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from pyredis.exceptions import *
 from pyredis.protocol import writer
 import socket
@@ -7,12 +8,12 @@ except ImportError:
     from pyredis.protocol import Reader
 
 __all__ = [
-    'Connection'
+    u'Connection'
 ]
 
 
 class Connection(object):
-    """ Low level client for talking to a Redis Server.
+    u""" Low level client for talking to a Redis Server.
 
     This class is should not be used directly to talk to a Redis server,
     unless you know what you are doing. In most cases it should be
@@ -70,7 +71,7 @@ class Connection(object):
             sentinel=False):
 
         if not bool(host) != bool(unix_sock):
-            raise PyRedisError('Ether host or unix_sock has to be provided')
+            raise PyRedisError(u'Ether host or unix_sock has to be provided')
         self._closed = False
         self._conn_timeout = conn_timeout
         self._read_timeout = read_timeout
@@ -89,16 +90,16 @@ class Connection(object):
         if self._sentinel:
             return
         if self.password:
-            self.write('AUTH', self.password)
+            self.write(u'AUTH', self.password)
             try:
                 self.read()
-            except ReplyError as err:
+            except ReplyError, err:
                 self.close()
                 raise err
 
     def _connect(self):
         if self._closed:
-            raise PyRedisConnError('Connection Gone')
+            raise PyRedisConnError(u'Connection Gone')
         if self.host:
             sock = self._connect_inet46()
         else:
@@ -124,16 +125,16 @@ class Connection(object):
                 sock.settimeout(self._conn_timeout)
                 sock.connect((self.host, self.port))
             except socket.gaierror:
-                raise PyRedisConnError('Host is neither a IPv4 or IPv6 address')
+                raise PyRedisConnError(u'Host is neither a IPv4 or IPv6 address')
         except (
             ConnectionAbortedError,
             ConnectionRefusedError,
             OverflowError,
             socket.timeout,
             OSError
-        ) as err:
+        ), err:
             self.close()
-            raise PyRedisConnError('Could not Connect to {0}:{1}: {2}'.format(
+            raise PyRedisConnError(u'Could not Connect to {0}:{1}: {2}'.format(
                 self.host,
                 self.port,
                 err
@@ -151,9 +152,9 @@ class Connection(object):
             FileNotFoundError,
             socket.timeout,
             OSError
-        ) as err:
+        ), err:
             self.close()
-            raise PyRedisConnError('Could not Connect to {0}: {1}'.format(
+            raise PyRedisConnError(u'Could not Connect to {0}: {1}'.format(
                 self.host,
                 err
             ))
@@ -163,15 +164,15 @@ class Connection(object):
         if self._sentinel:
             return
         self._sock.settimeout(0.1)
-        self.write('SELECT', self.database)
+        self.write(u'SELECT', self.database)
         try:
             self.read()
-        except ReplyError as err:
+        except ReplyError, err:
             self.close()
             raise err
 
     def close(self):
-        """ Close Client Connection.
+        u""" Close Client Connection.
 
         This closes the underlying socket, and mark the connection as closed.
 
@@ -188,7 +189,7 @@ class Connection(object):
         return self._closed
 
     def read(self, close_on_timeout=True, raise_on_result_err=True):
-        """ Read result from the socket.
+        u""" Read result from the socket.
 
         :param close_on_timeout:
             Close the connection after a read timeout
@@ -214,17 +215,17 @@ class Connection(object):
             except socket.timeout:
                 if close_on_timeout:
                     self.close()
-                raise PyRedisConnReadTimeout('Connection timeout while reading')
+                raise PyRedisConnReadTimeout(u'Connection timeout while reading')
             except ConnectionResetError:
                 self.close()
-                raise PyRedisConnError('Connection reset by peer')
+                raise PyRedisConnError(u'Connection reset by peer')
             if not data:
                 self.close()
-                raise PyRedisConnClosed('Connection went away while reading')
+                raise PyRedisConnClosed(u'Connection went away while reading')
             self._reader.feed(data)
 
     def write(self, *args):
-        """ Write commands to socket.
+        u""" Write commands to socket.
 
         :param args:
             Accepts a variable number of arguments
@@ -240,7 +241,7 @@ class Connection(object):
         while bytes_sent < msg_len:
             try:
                 sent = self._sock.send(msg[bytes_sent:])
-            except BrokenPipeError as err:
+            except BrokenPipeError, err:
                 self.close()
-                raise PyRedisConnError('Connection lost while writing: {0}'.format(err))
+                raise PyRedisConnError(u'Connection lost while writing: {0}'.format(err))
             bytes_sent += sent
