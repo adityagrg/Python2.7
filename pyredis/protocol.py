@@ -1,19 +1,20 @@
+from __future__ import absolute_import
 import sys
 from io import BytesIO
 from pyredis.exceptions import ProtocolError, ReplyError
 
-SYM_CRLF = b'\r\n'
-SYM_EMPTY = b''
+SYM_CRLF = '\r\n'
+SYM_EMPTY = ''
 
-TYPE_SIMPLE = b'+'
-TYPE_ERROR = b'-'
-TYPE_INT = b':'
-TYPE_BULK = b'$'
-TYPE_ARRAY = b'*'
+TYPE_SIMPLE = '+'
+TYPE_ERROR = '-'
+TYPE_INT = ':'
+TYPE_BULK = '$'
+TYPE_ARRAY = '*'
 
 __all__ = [
-    'Reader',
-    'writer'
+    u'Reader',
+    u'writer'
 ]
 
 
@@ -24,10 +25,10 @@ def is_exception(inst, classinfo):
         else:
             raise TypeError()
     except TypeError:
-        if isinstance(inst('test'), classinfo):
+        if isinstance(inst(u'test'), classinfo):
             return True
         else:
-            raise TypeError('{0} is not a subclass of {1}'.format(inst, classinfo))
+            raise TypeError(u'{0} is not a subclass of {1}'.format(inst, classinfo))
 
 
 class ReplyParser(object):
@@ -40,7 +41,7 @@ class ReplyParser(object):
         self._todo = self.header
         self._source = source
         self.complete = False
-        self.result = b''
+        self.result = ''
 
     def decode(self, data):
         if self._encoding:
@@ -66,7 +67,7 @@ class ReplyParser(object):
         elif byte == SYM_EMPTY:
             return None
         else:
-            raise self._protocol_error('Protocol error, got {0} as reply type byte'.format(byte))
+            raise self._protocol_error(u'Protocol error, got {0} as reply type byte'.format(byte))
 
     def parse(self):
         while not self.complete:
@@ -111,7 +112,7 @@ class ReplyParser(object):
     def parse_bulk(self):
         if not self._len:
             bulk_len = self.readline()
-            if bulk_len == b'-1':
+            if bulk_len == '-1':
                 self.complete = True
                 self.result = None
                 return True
@@ -150,7 +151,7 @@ class ReplyParser(object):
         self.result += self._source.readline()
         if self.result.endswith(SYM_CRLF):
             result = self.result.rstrip(SYM_CRLF)
-            self.result = b''
+            self.result = ''
             return result
 
     def reset(self):
@@ -158,7 +159,7 @@ class ReplyParser(object):
         self._todo = self.header
         self._nested_parser = None
         self.complete = False
-        self.result = b''
+        self.result = ''
 
 
 class Reader(object):
@@ -190,15 +191,15 @@ class Reader(object):
         if offset and length:
             if (offset + length > len(data)) or \
                     (offset or length) < 0:
-                raise ValueError('offset+length bigger then available date')
+                raise ValueError(u'offset+length bigger then available date')
             data = data[offset:][:length]
         elif offset:
             if (offset > len(data)) or (offset < 0):
-                raise ValueError('offset bigger then available data')
+                raise ValueError(u'offset bigger then available data')
             data = data[offset:]
         elif length:
             if (length > len(data)) or (length < 0):
-                raise ValueError('length bigger then available data')
+                raise ValueError(u'length bigger then available data')
             data = data[:length]
         self._buffer.seek(0, 2)
         self._buffer.write(data)
@@ -216,14 +217,14 @@ class Reader(object):
 
 
 def to_bytes(value):
-    if isinstance(value, str):
+    if isinstance(value, unicode):
         return value.encode()
     elif isinstance(value, (int, float)):
-        return str(value).encode()
-    elif isinstance(value, bytes):
+        return unicode(value).encode()
+    elif isinstance(value, str):
         return value
     else:
-        raise ValueError('Unsupported value, has to be a instance of bytes, str, int or float')
+        raise ValueError(u'Unsupported value, has to be a instance of bytes, str, int or float')
 
 
 def writer(*args):
@@ -243,4 +244,4 @@ def writer(*args):
         buf.append(member)
         buf.append(SYM_CRLF)
 
-    return b''.join(buf)
+    return ''.join(buf)
