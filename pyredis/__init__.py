@@ -73,7 +73,7 @@ def get_by_url(url):
             return PubSubClient(host=host, port=port, **kwargs)
         else:
             raise PyRedisURLError("invalid schema: {0}")
-    except TypeError, err:
+    except TypeError as err:
         raise PyRedisURLError("unexpected or missing options specified: {0}".format(err))
 
 
