@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import deque
 
 from pyredis import commands
@@ -19,7 +20,7 @@ class Client(
     commands.String,
     commands.Transaction,
 ):
-    """ Base Client for Talking to Redis.
+    u""" Base Client for Talking to Redis.
 
     Inherits the following Commmand classes:
       - commands.Connection,
@@ -39,7 +40,7 @@ class Client(
         pyredis.Client takes the same arguments as pyredis.connection.Connection.
     """
     def __init__(self, **kwargs):
-        super().__init__()
+        super(Client, self).__init__()
         self._conn = Connection(**kwargs)
         self._bulk = False
         self._bulk_keep = False
@@ -66,14 +67,14 @@ class Client(
 
     @property
     def bulk(self):
-        """ True if bulk mode is enabled.
+        u""" True if bulk mode is enabled.
 
         :return: bool
         """
         return self._bulk
 
     def bulk_start(self, bulk_size=5000, keep_results=True):
-        """ Enable bulk mode
+        u""" Enable bulk mode
 
         Put the client into bulk mode. Instead of executing a command & waiting for
         the reply, all commands are send to Redis without fetching the result.
@@ -91,7 +92,7 @@ class Client(
         :return: None
         """
         if self.bulk:
-            raise PyRedisError("Already in bulk mode")
+            raise PyRedisError(u"Already in bulk mode")
         self._bulk = True
         self._bulk_size = bulk_size
         self._bulk_size_current = 0
@@ -100,7 +101,7 @@ class Client(
             self._bulk_keep = True
 
     def bulk_stop(self):
-        """ Stop bulk mode.
+        u""" Stop bulk mode.
 
         All outstanding results from previous commands get fetched.
         If bulk_start was called with keep_results=True, return a list with all
@@ -110,7 +111,7 @@ class Client(
         :return: None, list
         """
         if not self.bulk:
-            raise PyRedisError("Not in bulk mode")
+            raise PyRedisError(u"Not in bulk mode")
         self._bulk_fetch()
         results = self._bulk_results
         self._bulk = False
@@ -121,7 +122,7 @@ class Client(
         return results
 
     def close(self):
-        """ Close client.
+        u""" Close client.
 
         :return: None
         """
@@ -129,14 +130,14 @@ class Client(
 
     @property
     def closed(self):
-        """ Check if client is closed.
+        u""" Check if client is closed.
 
         :return: bool
         """
         return self._conn.closed
 
     def execute(self, *args):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -161,7 +162,7 @@ class ClusterClient(
     commands.String,
     commands.Transaction
 ):
-    """ Base Client for Talking to Redis Cluster.
+    u""" Base Client for Talking to Redis Cluster.
 
     Inherits the following Commmand classes:
       - commands.Connection,
@@ -213,9 +214,9 @@ class ClusterClient(
             conn_timeout=2,
             read_timeout=2,
             cluster_map=None):
-        super().__init__()
+        super(ClusterClient, self).__init__()
         if not bool(seeds) != bool(cluster_map):
-            raise PyRedisError('Ether seeds or cluster_map has to be provided')
+            raise PyRedisError(u'Ether seeds or cluster_map has to be provided')
         self._cluster = True
         self._conns = dict()
         self._conn_timeout = conn_timeout
@@ -242,7 +243,7 @@ class ClusterClient(
             del self._conns[conn]
 
     def _connect(self, sock):
-        host, port = sock.split('_')
+        host, port = sock.split(u'_')
         client = Connection(
             host=host, port=int(port),
             conn_timeout=self._conn_timeout,
@@ -268,8 +269,16 @@ class ClusterClient(
     def closed(self):
         return False
 
-    def execute(self, *args, shard_key=None, sock=None, asking=False, retries=3):
-        """ Execute arbitrary redis command.
+    def execute(self, *args, **_3to2kwargs):
+        if 'retries' in _3to2kwargs: retries = _3to2kwargs['retries']; del _3to2kwargs['retries']
+        else: retries = 3
+        if 'asking' in _3to2kwargs: asking = _3to2kwargs['asking']; del _3to2kwargs['asking']
+        else: asking = False
+        if 'sock' in _3to2kwargs: sock = _3to2kwargs['sock']; del _3to2kwargs['sock']
+        else: sock = None
+        if 'shard_key' in _3to2kwargs: shard_key = _3to2kwargs['shard_key']; del _3to2kwargs['shard_key']
+        else: shard_key = None
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -288,33 +297,33 @@ class ClusterClient(
         :return: result, exception
         """
         if not bool(shard_key) != bool(sock):
-            raise PyRedisError('Ether shard_key or sock has to be provided')
+            raise PyRedisError(u'Ether shard_key or sock has to be provided')
         if not sock:
             sock = self._get_slot_info(shard_key)
         if sock not in self._conns.keys():
             self._connect(sock)
         try:
             if asking:
-                self._conns[sock].write('ASKING', *args)
+                self._conns[sock].write(u'ASKING', *args)
             else:
                 self._conns[sock].write(*args)
             return self._conns[sock].read()
-        except ReplyError as err:
-            errstr = str(err)
-            if retries <= 1 and (errstr.startswith('MOVED') or errstr.startswith('ASK')):
-                raise PyRedisError('Slot moved to often or wrong shard_key, giving up,')
-            if errstr.startswith('MOVED'):
+        except ReplyError, err:
+            errstr = unicode(err)
+            if retries <= 1 and (errstr.startswith(u'MOVED') or errstr.startswith(u'ASK')):
+                raise PyRedisError(u'Slot moved to often or wrong shard_key, giving up,')
+            if errstr.startswith(u'MOVED'):
                 if not shard_key:
-                    raise ReplyError('Explicitly set socket, but key does not belong to this redis: {0}'.format(sock))
+                    raise ReplyError(u'Explicitly set socket, but key does not belong to this redis: {0}'.format(sock))
                 self._map_id = self._map.update(self._map_id)
                 self._cleanup_conns()
                 return self.execute(*args, shard_key=shard_key, retries=retries-1)
-            elif errstr.startswith('ASK'):
-                sock = errstr.split()[2].replace(':', '_')
+            elif errstr.startswith(u'ASK'):
+                sock = errstr.split()[2].replace(u':', u'_')
                 return self.execute(*args, sock=sock, retries=retries-1, asking=True)
             else:
                 raise err
-        except (PyRedisConnError, PyRedisConnReadTimeout) as err:
+        except (PyRedisConnError, PyRedisConnReadTimeout), err:
             self._conns[sock].close()
             del self._conns[sock]
             self._map.update(self._map_id)
@@ -334,7 +343,7 @@ class HashClient(
     commands.String,
     commands.Transaction,
 ):
-    """ Client for Talking to Static Hashed Redis Cluster.
+    u""" Client for Talking to Static Hashed Redis Cluster.
     
     The Client will calculate a crc16 hash using the shard_key,
     which is be default the first Key in case the command supports multiple keys.
@@ -365,7 +374,7 @@ class HashClient(
     """
     def __init__(self, buckets, database=0, password=None, encoding=None, conn_timeout=2, read_timeout=2):
 
-        super().__init__()
+        super(HashClient, self).__init__()
         self._conns = dict()
         self._conn_names = list()
         self._bulk = False
@@ -389,11 +398,13 @@ class HashClient(
         self._bulk_size_current = 0
 
     @staticmethod
-    def _execute_basic(*args, conn):
+    def _execute_basic(*args, **_3to2kwargs):
+        conn = _3to2kwargs['conn']; del _3to2kwargs['conn']
         conn.write(*args)
         return conn.read()
 
-    def _execute_bulk(self, *args, conn):
+    def _execute_bulk(self, *args, **_3to2kwargs):
+        conn = _3to2kwargs['conn']; del _3to2kwargs['conn']
         conn.write(*args)
         self._bulk_size_current += 1
         self._bulk_bucket_order.append(conn)
@@ -403,7 +414,7 @@ class HashClient(
     def _init_conns(self, buckets, database, password, encoding, conn_timeout, read_timeout):
         for bucket in buckets:
             host, port = bucket
-            bucketname = '{0}_{1}'.format(host, port)
+            bucketname = u'{0}_{1}'.format(host, port)
             self._conn_names.append(bucketname)
             self._conns[bucketname] = Connection(
                 host=host, port=port, database=database, password=password,
@@ -413,7 +424,7 @@ class HashClient(
     def _init_map(self):
         num_buckets = len(self._conn_names) - 1
         cur_bucket = 0
-        for slot in range(16384):
+        for slot in xrange(16384):
             self._map[slot] = self._conn_names[cur_bucket]
             if cur_bucket == num_buckets:
                 cur_bucket = 0
@@ -422,14 +433,14 @@ class HashClient(
 
     @property
     def bulk(self):
-        """ True if bulk mode is enabled.
+        u""" True if bulk mode is enabled.
 
         :return: bool
         """
         return self._bulk
 
     def bulk_start(self, bulk_size=5000, keep_results=True):
-        """ Enable bulk mode
+        u""" Enable bulk mode
 
         Put the client into bulk mode. Instead of executing a command & waiting for
         the reply, all commands are send to Redis without fetching the result.
@@ -447,7 +458,7 @@ class HashClient(
         :return: None
         """
         if self.bulk:
-            raise PyRedisError("Already in bulk mode")
+            raise PyRedisError(u"Already in bulk mode")
         self._bulk = True
         self._bulk_size = bulk_size
         self._bulk_size_current = 0
@@ -456,7 +467,7 @@ class HashClient(
             self._bulk_keep = True
 
     def bulk_stop(self):
-        """ Stop bulk mode.
+        u""" Stop bulk mode.
 
         All outstanding results from previous commands get fetched.
         If bulk_start was called with keep_results=True, return a list with all
@@ -466,7 +477,7 @@ class HashClient(
         :return: None, list
         """
         if not self.bulk:
-            raise PyRedisError("Not in bulk mode")
+            raise PyRedisError(u"Not in bulk mode")
         self._bulk_fetch()
         results = self._bulk_results
         self._bulk = False
@@ -477,7 +488,7 @@ class HashClient(
         return results
 
     def close(self):
-        """ Close client.
+        u""" Close client.
 
         :return: None
         """
@@ -487,14 +498,18 @@ class HashClient(
 
     @property
     def closed(self):
-        """ Check if client is closed.
+        u""" Check if client is closed.
 
         :return: bool
         """
         return self._closed
 
-    def execute(self, *args, shard_key=None, sock=None):
-        """ Execute arbitrary redis command.
+    def execute(self, *args, **_3to2kwargs):
+        if 'sock' in _3to2kwargs: sock = _3to2kwargs['sock']; del _3to2kwargs['sock']
+        else: sock = None
+        if 'shard_key' in _3to2kwargs: shard_key = _3to2kwargs['shard_key']; del _3to2kwargs['shard_key']
+        else: shard_key = None
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -513,7 +528,7 @@ class HashClient(
         :return: result, exception
         """
         if not bool(shard_key) != bool(sock):
-            raise PyRedisError('Ether shard_key or sock has to be provided')
+            raise PyRedisError(u'Ether shard_key or sock has to be provided')
         if not sock:
             sock = self._map[slot_from_key(shard_key)]
         conn = self._conns[sock]
@@ -522,13 +537,13 @@ class HashClient(
                 return self._execute_basic(conn=conn, *args)
             else:
                 self._execute_bulk(conn=conn, *args)
-        except PyRedisConnError as err:
+        except PyRedisConnError, err:
             self.close()
             raise err
 
 
 class PubSubClient(commands.Subscribe):
-    """ Pub/Sub Client.
+    u""" Pub/Sub Client.
 
     Subscribe part of the Redis Pub/Sub System.
 
@@ -539,7 +554,7 @@ class PubSubClient(commands.Subscribe):
         self._conn = Connection(**kwargs)
 
     def close(self):
-        """ Close Client
+        u""" Close Client
 
         :return: None
         """
@@ -547,7 +562,7 @@ class PubSubClient(commands.Subscribe):
 
     @property
     def closed(self):
-        """ Check if Client is closed.
+        u""" Check if Client is closed.
 
         :return: bool
         """
@@ -557,7 +572,7 @@ class PubSubClient(commands.Subscribe):
         return self._conn.write(*args)
 
     def get(self):
-        """ Fetch published item from Redis.
+        u""" Fetch published item from Redis.
 
         :return: list
         """
@@ -565,7 +580,7 @@ class PubSubClient(commands.Subscribe):
 
 
 class SentinelClient(object):
-    """ Redis Sentinel Client.
+    u""" Redis Sentinel Client.
 
     :param sentinels:
         Accepts a list of sentinels in this form: [('sentinel1', 26379), ('sentinel2', 26379), ('sentinel3', 26379)]
@@ -579,22 +594,22 @@ class SentinelClient(object):
         host, port = sentinel
         self._conn = Connection(host=host, port=port, conn_timeout=0.1, sentinel=True)
         try:
-            self.execute('PING')
+            self.execute(u'PING')
             return True
         except PyRedisConnError:
             self.close()
             return False
 
     def _sentinel_get(self):
-        for sentinel in range(len(self._sentinels)):
+        for sentinel in xrange(len(self._sentinels)):
             if self._sentinel_connect(self._sentinels[0]):
                 return True
             else:
                 self._sentinels.rotate(-1)
-        raise PyRedisConnError('Could not connect to any sentinel')
+        raise PyRedisConnError(u'Could not connect to any sentinel')
 
     def close(self):
-        """ Close Connection.
+        u""" Close Connection.
 
         :return: None
         """
@@ -604,14 +619,14 @@ class SentinelClient(object):
 
     @property
     def sentinels(self):
-        """ Return configured sentinels.
+        u""" Return configured sentinels.
 
         :return: deque
         """
         return self._sentinels
 
     def execute(self, *args):
-        """ Execute sentinel command.
+        u""" Execute sentinel command.
 
         :param args:
         :type args: string, int, float
@@ -624,7 +639,7 @@ class SentinelClient(object):
         return self._conn.read()
 
     def get_master(self, name):
-        """ Get Master Info.
+        u""" Get Master Info.
 
         Return dictionary with master details.
 
@@ -633,21 +648,21 @@ class SentinelClient(object):
 
         :return: dict
         """
-        return dict_from_list(self.execute('SENTINEL', 'master', name))
+        return dict_from_list(self.execute(u'SENTINEL', u'master', name))
 
     def get_masters(self):
-        """ Get list of masters.
+        u""" Get list of masters.
 
         :return: list of dicts
         """
-        masters = self.execute('SENTINEL', 'masters')
+        masters = self.execute(u'SENTINEL', u'masters')
         result = []
         for master in masters:
             result.append(dict_from_list(master))
         return result
 
     def get_slaves(self, name):
-        """ Get slaves.
+        u""" Get slaves.
 
         Return a list of dictionaries, with slave details.
 
@@ -656,14 +671,14 @@ class SentinelClient(object):
 
         :return:
         """
-        slaves = self.execute('SENTINEL', 'slaves', name)
+        slaves = self.execute(u'SENTINEL', u'slaves', name)
         result = []
         for slave in slaves:
             result.append(dict_from_list(slave))
         return result
 
     def next_sentinel(self):
-        """ Switch to the Next Sentinel.
+        u""" Switch to the Next Sentinel.
 
         :return: None
         """
