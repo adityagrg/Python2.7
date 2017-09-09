@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from random import shuffle
 import threading
 from pyredis import commands
@@ -7,7 +8,7 @@ from pyredis.helper import ClusterMap
 
 
 class BasePool(object):
-    """ Base Class for all other pools.
+    u""" Base Class for all other pools.
 
     All other pools inherit from this base class.
     This class itself, cannot be used directly.
@@ -64,7 +65,7 @@ class BasePool(object):
 
     @property
     def conn_timeout(self):
-        """ Return configured connection timeout
+        u""" Return configured connection timeout
 
         :return: float
         """
@@ -72,7 +73,7 @@ class BasePool(object):
 
     @property
     def read_timeout(self):
-        """ Return configured read timeout
+        u""" Return configured read timeout
 
         :return: float
         """
@@ -80,7 +81,7 @@ class BasePool(object):
 
     @property
     def database(self):
-        """ Return configured database.
+        u""" Return configured database.
 
         :return: int
         """
@@ -88,7 +89,7 @@ class BasePool(object):
 
     @property
     def password(self):
-        """ Return configured password for this pool.
+        u""" Return configured password for this pool.
 
         :return: str, None
         """
@@ -96,7 +97,7 @@ class BasePool(object):
 
     @property
     def encoding(self):
-        """ Return configured encoding
+        u""" Return configured encoding
 
         :return: str, None
         """
@@ -104,7 +105,7 @@ class BasePool(object):
 
     @property
     def pool_size(self):
-        """ Return, or adjust the current pool size.
+        u""" Return, or adjust the current pool size.
 
         shrinking is implemented via closing unused connections.
         if there not enough unused connections to fulfil the shrink request,
@@ -138,7 +139,7 @@ class BasePool(object):
         raise NotImplemented
 
     def acquire(self):
-        """ Acquire a client connection from the pool.
+        u""" Acquire a client connection from the pool.
 
         :return: redis.Client, exception
         """
@@ -151,13 +152,13 @@ class BasePool(object):
                 client = self._connect()
                 self._pool_used.add(client)
             else:
-                raise PyRedisError('Max connections {0} exhausted'.format(self.pool_size))
+                raise PyRedisError(u'Max connections {0} exhausted'.format(self.pool_size))
         finally:
             self._lock.release()
         return client
 
     def release(self, conn):
-        """ Return a client connection to the pool.
+        u""" Return a client connection to the pool.
 
         :param conn:
             redis.Client instance, managed by this pool.
@@ -195,7 +196,7 @@ class ClusterPool(
     commands.SSet,
     commands.String,
 ):
-    """ Redis Cluster Pool.
+    u""" Redis Cluster Pool.
 
     Inherits all the arguments, methods and attributes from BasePool.
 
@@ -214,14 +215,14 @@ class ClusterPool(
     """
 
     def __init__(self, seeds, slave_ok=False, **kwargs):
-        super().__init__(**kwargs)
+        super(ClusterPool, self).__init__(**kwargs)
         self._map = ClusterMap(seeds=seeds)
         self._slave_ok = slave_ok
         self._cluster = True
 
     @property
     def slave_ok(self):
-        """ True if this pool will return slave connections
+        u""" True if this pool will return slave connections
 
         :return: bool
         """
@@ -239,7 +240,7 @@ class ClusterPool(
         )
 
     def execute(self, *args, **kwargs):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -266,7 +267,7 @@ class HashPool(
     commands.SSet,
     commands.String,
 ):
-    """ Pool for straight connections to Redis
+    u""" Pool for straight connections to Redis
 
     Inherits all the arguments, methods and attributes from BasePool.
     
@@ -291,13 +292,13 @@ class HashPool(
     :type port: list
     """
     def __init__(self, buckets, **kwargs):
-        super().__init__(**kwargs)
+        super(HashPool, self).__init__(**kwargs)
         self._buckets = buckets
         self._cluster = True
 
     @property
     def buckets(self):
-        """ Return configured buckets.
+        u""" Return configured buckets.
 
         :return: list
         """
@@ -314,7 +315,7 @@ class HashPool(
         )
 
     def execute(self, *args, **kwargs):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -341,7 +342,7 @@ class Pool(
     commands.SSet,
     commands.String,
 ):
-    """ Pool for straight connections to Redis
+    u""" Pool for straight connections to Redis
 
     Inherits all the arguments, methods and attributes from BasePool.
 
@@ -362,15 +363,15 @@ class Pool(
     """
     def __init__(self, host=None, port=6379, unix_sock=None, **kwargs):
         if not bool(host) != bool(unix_sock):
-            raise PyRedisError("Ether host or unix_sock has to be provided")
-        super().__init__(**kwargs)
+            raise PyRedisError(u"Ether host or unix_sock has to be provided")
+        super(Pool, self).__init__(**kwargs)
         self._host = host
         self._port = port
         self._unix_sock = unix_sock
 
     @property
     def host(self):
-        """ Return configured host.
+        u""" Return configured host.
 
         :return: str, None
         """
@@ -378,7 +379,7 @@ class Pool(
 
     @property
     def port(self):
-        """ Return configured port.
+        u""" Return configured port.
 
         :return: int
         """
@@ -386,7 +387,7 @@ class Pool(
 
     @property
     def unix_sock(self):
-        """ Return configured Unix socket.
+        u""" Return configured Unix socket.
 
         :return: str, None
         """
@@ -405,7 +406,7 @@ class Pool(
             )
 
     def execute(self, *args):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -432,7 +433,7 @@ class SentinelHashPool(
     commands.SSet,
     commands.String,
 ):
-    """ Sentinel backed Pool.
+    u""" Sentinel backed Pool.
 
     Inherits all the arguments, methods and attributes from BasePool.
 
@@ -453,7 +454,7 @@ class SentinelHashPool(
     :type retries: int
     """
     def __init__(self, sentinels, buckets, slave_ok=False, retries=3, **kwargs):
-        super().__init__(**kwargs)
+        super(SentinelHashPool, self).__init__(**kwargs)
         self._sentinel = SentinelClient(sentinels=sentinels)
         self._buckets = buckets
         self._slave_ok = slave_ok
@@ -463,7 +464,7 @@ class SentinelHashPool(
 
     @property
     def slave_ok(self):
-        """ True if this pool return slave connections
+        u""" True if this pool return slave connections
 
         :return: bool
         """
@@ -471,7 +472,7 @@ class SentinelHashPool(
 
     @property
     def buckets(self):
-        """ Name of the configured Sentinel managed cluster.
+        u""" Name of the configured Sentinel managed cluster.
 
         :return: str
         """
@@ -479,7 +480,7 @@ class SentinelHashPool(
 
     @property
     def retries(self):
-        """ Number of retries in case of stale sentinel.
+        u""" Number of retries in case of stale sentinel.
 
         :return: int
         """
@@ -487,7 +488,7 @@ class SentinelHashPool(
 
     @property
     def sentinels(self):
-        """ Deque with configured sentinels.
+        u""" Deque with configured sentinels.
 
         :return: deque
         """
@@ -524,8 +525,8 @@ class SentinelHashPool(
 
     def _get_master(self, bucket):
         candidate = self._sentinel.get_master(bucket)
-        host = candidate[b'ip'].decode('utf8')
-        port = int(candidate[b'port'])
+        host = candidate['ip'].decode(u'utf8')
+        port = int(candidate['port'])
         return host, port
 
     def _get_masters(self):
@@ -539,15 +540,15 @@ class SentinelHashPool(
                     buckets.append(_bucket)
                     break
                 if _counter == 0:
-                    raise PyRedisConnError("Could not connect to bucket {0}".format(bucket))
+                    raise PyRedisConnError(u"Could not connect to bucket {0}".format(bucket))
         return self._get_hash_client(buckets=buckets)
 
     def _get_slave(self, bucket):
         candidates = []
         for candidate in self._sentinel.get_slaves(bucket):
-            candidates.append((candidate[b'ip'], int(candidate[b'port'])))
+            candidates.append((candidate['ip'], int(candidate['port'])))
         shuffle(candidates)
-        host = candidates[0][0].decode('utf8')
+        host = candidates[0][0].decode(u'utf8')
         port = int(candidates[0][1])
         return host, port
 
@@ -562,11 +563,11 @@ class SentinelHashPool(
                     buckets.append(_bucket)
                     break
                 if _counter == 0:
-                    raise PyRedisConnError("Could not connect to bucket {0}".format(bucket))
+                    raise PyRedisConnError(u"Could not connect to bucket {0}".format(bucket))
         return self._get_hash_client(buckets=buckets)
 
     def execute(self, *args, **kwargs):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
@@ -593,7 +594,7 @@ class SentinelPool(
     commands.SSet,
     commands.String,
 ):
-    """ Sentinel backed Pool.
+    u""" Sentinel backed Pool.
 
     Inherits all the arguments, methods and attributes from BasePool.
 
@@ -614,7 +615,7 @@ class SentinelPool(
     :type retries: int
     """
     def __init__(self, sentinels, name, slave_ok=False, retries=3, **kwargs):
-        super().__init__(**kwargs)
+        super(SentinelPool, self).__init__(**kwargs)
         self._sentinel = SentinelClient(sentinels=sentinels)
         self._name = name
         self._slave_ok = slave_ok
@@ -623,7 +624,7 @@ class SentinelPool(
 
     @property
     def slave_ok(self):
-        """ True if this pool return slave connections
+        u""" True if this pool return slave connections
 
         :return: bool
         """
@@ -631,7 +632,7 @@ class SentinelPool(
 
     @property
     def name(self):
-        """ Name of the configured Sentinel managed cluster.
+        u""" Name of the configured Sentinel managed cluster.
 
         :return: str
         """
@@ -639,7 +640,7 @@ class SentinelPool(
 
     @property
     def retries(self):
-        """ Number of retries in case of stale sentinel.
+        u""" Number of retries in case of stale sentinel.
 
         :return: int
         """
@@ -647,21 +648,21 @@ class SentinelPool(
 
     @property
     def sentinels(self):
-        """ Deque with configured sentinels.
+        u""" Deque with configured sentinels.
 
         :return: deque
         """
         return self._sentinel.sentinels
 
     def _connect(self):
-        for _ in range(self.retries):
+        for _ in xrange(self.retries):
             if self.slave_ok:
                 client = self._get_slave()
             else:
                 client = self._get_master()
             if client:
                 return client
-        raise PyRedisConnError("Could not connect to Redis")
+        raise PyRedisConnError(u"Could not connect to Redis")
 
     def _get_client(self, host, port):
         return Client(
@@ -676,15 +677,15 @@ class SentinelPool(
 
     def _get_master(self):
         candidate = self._sentinel.get_master(self.name)
-        host = candidate[b'ip']
-        port = int(candidate[b'port'])
+        host = candidate['ip']
+        port = int(candidate['port'])
         client = self._get_client(host, port)
         return client
 
     def _get_slave(self):
         candidates = []
         for candidate in self._sentinel.get_slaves(self.name):
-            candidates.append((candidate[b'ip'], int(candidate[b'port'])))
+            candidates.append((candidate['ip'], int(candidate['port'])))
         shuffle(candidates)
         host = candidates[0][0]
         port = int(candidates[0][1])
@@ -692,7 +693,7 @@ class SentinelPool(
         return client
 
     def execute(self, *args):
-        """ Execute arbitrary redis command.
+        u""" Execute arbitrary redis command.
 
         :param args:
         :type args: list, int, float
