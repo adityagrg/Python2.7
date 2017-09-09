@@ -1,14 +1,15 @@
-__author__ = 'schlitzer'
+from __future__ import absolute_import
+__author__ = u'schlitzer'
 
 
 __all__ = [
-    'PyRedisError',
-    'PyRedisURLError',
-    'PyRedisConnError',
-    'PyRedisConnClosed',
-    'PyRedisConnReadTimeout',
-    'ProtocolError',
-    'ReplyError'
+    u'PyRedisError',
+    u'PyRedisURLError',
+    u'PyRedisConnError',
+    u'PyRedisConnClosed',
+    u'PyRedisConnReadTimeout',
+    u'ProtocolError',
+    u'ReplyError'
 ]
 
 
