@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from unittest import TestCase
 from unittest.mock import Mock, MagicMock, PropertyMock, call, patch
 
@@ -12,18 +13,18 @@ class TestConnectionUnit(TestCase):
     def setUp(self):
         self.addCleanup(patch.stopall)
 
-        socket_patcher = patch('pyredis.connection.socket', autospec=True)
+        socket_patcher = patch(u'pyredis.connection.socket', autospec=True)
         self.socket_mock = socket_patcher.start()
         self.socket_mock.socket.return_value = Mock()
 
-        reader_patcher = patch('pyredis.connection.Reader', autospec=True)
+        reader_patcher = patch(u'pyredis.connection.Reader', autospec=True)
         self.reader_mock = reader_patcher.start()
 
     def test___init___default_args_host(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         self.assertEqual(connection._conn_timeout, 2)
         self.assertEqual(connection._read_timeout, 2)
-        self.assertEqual(connection.host, '127.0.0.1')
+        self.assertEqual(connection.host, u'127.0.0.1')
         self.assertEqual(connection.port, 6379)
         self.assertEqual(connection._writer, pyredis.connection.writer)
         self.assertIsNone(connection.password)
@@ -32,10 +33,10 @@ class TestConnectionUnit(TestCase):
         self.assertFalse(connection._closed)
 
     def test___init___default_args_unix_sock(self):
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
         self.assertEqual(connection._conn_timeout, 2)
         self.assertEqual(connection._read_timeout, 2)
-        self.assertEqual(connection.unix_sock, '/tmp/test.sock')
+        self.assertEqual(connection.unix_sock, u'/tmp/test.sock')
         self.assertEqual(connection._writer, pyredis.connection.writer)
         self.assertIsNone(connection.password)
         self.assertIsNone(connection._reader)
@@ -43,16 +44,16 @@ class TestConnectionUnit(TestCase):
 
     def test___init___custom_args(self):
         connection = pyredis.connection.Connection(
-            host='127.0.0.4', port=1234, password='blubber',
-            conn_timeout=10, read_timeout=11, encoding='utf-8'
+            host=u'127.0.0.4', port=1234, password=u'blubber',
+            conn_timeout=10, read_timeout=11, encoding=u'utf-8'
         )
-        self.assertEqual(connection.host, '127.0.0.4')
+        self.assertEqual(connection.host, u'127.0.0.4')
         self.assertEqual(connection.port, 1234)
-        self.assertEqual(connection.password, 'blubber')
+        self.assertEqual(connection.password, u'blubber')
         self.assertEqual(connection._conn_timeout, 10)
         self.assertEqual(connection._read_timeout, 11)
         self.assertEqual(connection._writer, pyredis.connection.writer)
-        self.assertEqual(connection._encoding, 'utf-8')
+        self.assertEqual(connection._encoding, u'utf-8')
         self.assertIsNone(connection._reader)
         self.assertFalse(connection._closed)
 
@@ -63,37 +64,37 @@ class TestConnectionUnit(TestCase):
         self.assertRaises(
             PyRedisError,
             pyredis.connection.Connection,
-            host='127.0.0.1',
-            unix_sock='/tmp/test.sock'
+            host=u'127.0.0.1',
+            unix_sock=u'/tmp/test.sock'
         )
 
     def test__authenticate_ok(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1', password='testpass')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', password=u'testpass')
         connection.write = Mock()
         connection.read = Mock()
-        connection.read.return_value = b'OK'
+        connection.read.return_value = 'OK'
         connection._sock = Mock()
         connection._authenticate()
-        connection.write.assert_called_with('AUTH', 'testpass')
+        connection.write.assert_called_with(u'AUTH', u'testpass')
 
     def test__authenticate_exception(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1', password='testpass')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', password=u'testpass')
         connection.write = Mock()
         connection.read = Mock()
         connection.read.side_effect = ReplyError
         connection._sock = Mock()
         self.assertRaises(ReplyError, connection._authenticate)
-        connection.write.assert_called_with('AUTH', 'testpass')
+        connection.write.assert_called_with(u'AUTH', u'testpass')
 
     def test__connect_inet46_ipv4(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         sock = connection._connect_inet46()
         self.socket_mock.socket.assert_called_with(
             self.socket_mock.AF_INET,
             self.socket_mock.SOCK_STREAM
         )
         sock.settimeout.assert_called_with(2)
-        sock.connect.assert_called_with(('127.0.0.1', 6379))
+        sock.connect.assert_called_with((u'127.0.0.1', 6379))
         self.assertEqual(sock, self.socket_mock.socket())
 
     def test__connect_inet46_ipv6(self):
@@ -101,7 +102,7 @@ class TestConnectionUnit(TestCase):
         self.socket_mock.socket.side_effect = [socket.gaierror, sock_mock]
         self.socket_mock.gaierror = socket.gaierror
 
-        connection = pyredis.connection.Connection(host='::1')
+        connection = pyredis.connection.Connection(host=u'::1')
         sock = connection._connect_inet46()
 
         self.socket_mock.socket.assert_has_calls([
@@ -116,14 +117,14 @@ class TestConnectionUnit(TestCase):
         ])
 
         sock.settimeout.assert_called_with(2)
-        sock.connect.assert_called_with(('::1', 6379))
+        sock.connect.assert_called_with((u'::1', 6379))
         self.assertEqual(sock, sock_mock)
 
     def test__connect_inet46_no_ipv4_or_ipv6(self):
         self.socket_mock.socket.side_effect = [socket.gaierror, socket.gaierror]
         self.socket_mock.gaierror = socket.gaierror
 
-        connection = pyredis.connection.Connection(host='blarg')
+        connection = pyredis.connection.Connection(host=u'blarg')
         self.assertRaises(PyRedisConnError, connection._connect_inet46)
 
     def test__connect_inet46_socket_timeout(self):
@@ -134,7 +135,7 @@ class TestConnectionUnit(TestCase):
         self.socket_mock.gaierror = socket.gaierror
         self.socket_mock.timeout = socket.timeout
 
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         self.assertRaises(PyRedisConnError, connection._connect_inet46)
 
     def test__connect_inet46_OverflowError(self):
@@ -146,7 +147,7 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         self.assertRaises(PyRedisConnError, connection._connect_inet46)
 
     def test__connect_inet46_ConnectionRefusedError(self):
@@ -158,7 +159,7 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         self.assertRaises(PyRedisConnError, connection._connect_inet46)
 
     def test__connect_inet46_ConnectionAbortedError(self):
@@ -170,18 +171,18 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         self.assertRaises(PyRedisConnError, connection._connect_inet46)
 
     def test__connect_unix(self):
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
         sock = connection._connect_unix()
         self.socket_mock.socket.assert_called_with(
             self.socket_mock.AF_UNIX,
             self.socket_mock.SOCK_STREAM
         )
         sock.settimeout.assert_called_with(2)
-        sock.connect.assert_called_with('/tmp/test.sock')
+        sock.connect.assert_called_with(u'/tmp/test.sock')
         self.assertEqual(sock, self.socket_mock.socket())
 
     def test__connect_unix_ConnectionRefusedError(self):
@@ -192,7 +193,7 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
 
         self.assertRaises(PyRedisConnError, connection._connect_unix)
 
@@ -204,7 +205,7 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
 
         self.assertRaises(PyRedisConnError, connection._connect_unix)
 
@@ -216,7 +217,7 @@ class TestConnectionUnit(TestCase):
 
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
 
         self.assertRaises(PyRedisConnError, connection._connect_unix)
 
@@ -226,7 +227,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection._connect()
@@ -243,16 +244,16 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection._connect()
 
         sock_mock.settimeout.assert_called_with(2)
         self.assertEqual(connection._sock, self.socket_mock.socket())
-        self.assertEqual(connection._encoding, 'utf-8')
+        self.assertEqual(connection._encoding, u'utf-8')
         self.assertEqual(connection._reader, reader_mock)
-        self.reader_mock.assert_called_with(encoding='utf-8')
+        self.reader_mock.assert_called_with(encoding=u'utf-8')
 
     def test__connect_ipv6(self):
         sock_mock = Mock()
@@ -260,7 +261,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='::1')
+        connection = pyredis.connection.Connection(host=u'::1')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection._connect()
@@ -271,7 +272,7 @@ class TestConnectionUnit(TestCase):
         sock_mock = Mock()
         self.socket_mock.socket.return_value = sock_mock
 
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection._connect()
@@ -283,37 +284,37 @@ class TestConnectionUnit(TestCase):
         self.assertTrue(connection._closed)
 
     def test__setdb(self):
-        connection = pyredis.connection.Connection(host='localhost')
+        connection = pyredis.connection.Connection(host=u'localhost')
         connection.read = Mock()
-        connection.read.return_value = b'OK'
+        connection.read.return_value = 'OK'
         connection.write = Mock()
         connection._sock = Mock()
         connection._setdb()
-        connection.write.assert_called_with('SELECT', 0)
+        connection.write.assert_called_with(u'SELECT', 0)
         connection.read.assert_called_with()
 
     def test__setdb_invalid_db(self):
-        connection = pyredis.connection.Connection(host='localhost', database=23234)
+        connection = pyredis.connection.Connection(host=u'localhost', database=23234)
         connection.read = Mock()
         connection.read.side_effect = ReplyError
         connection.write = Mock()
         connection._sock = Mock()
         self.assertRaises(ReplyError, connection._setdb)
-        connection.write.assert_called_with('SELECT', 23234)
+        connection.write.assert_called_with(u'SELECT', 23234)
         connection.read.assert_called_with()
 
     def test_closed_false(self):
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
         self.assertFalse(connection.closed)
 
     def test_closed_true(self):
-        connection = pyredis.connection.Connection(unix_sock='/tmp/test.sock')
+        connection = pyredis.connection.Connection(unix_sock=u'/tmp/test.sock')
         connection._closed = True
         self.assertTrue(connection.closed)
 
     def test_write_one_chunk(self):
-        cmd = 'ECHO'
-        payload = "x" * 512
+        cmd = u'ECHO'
+        payload = u"x" * 512
         msg = writer(cmd, payload)
         length = 534
 
@@ -325,7 +326,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection.write(cmd, payload)
@@ -333,8 +334,8 @@ class TestConnectionUnit(TestCase):
         self.assertEqual(sock_mock.send.call_args_list, [call(msg)])
 
     def test_write_two_chunks(self):
-        cmd = 'ECHO'
-        payload = "x" * 512
+        cmd = u'ECHO'
+        payload = u"x" * 512
         msg = writer(cmd, payload)
 
         sock_mock = Mock()
@@ -345,7 +346,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection.write(cmd, payload)
@@ -353,8 +354,8 @@ class TestConnectionUnit(TestCase):
         self.assertEqual(sock_mock.send.call_args_list, [call(msg), call(msg[500:])])
 
     def test_write_exception_brokenpipeerror(self):
-        cmd = 'ECHO'
-        payload = "x" * 512
+        cmd = u'ECHO'
+        payload = u"x" * 512
 
         sock_mock = Mock()
 
@@ -364,15 +365,15 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         connection._connect()
         self.assertRaises(PyRedisConnError, connection.write, cmd, payload)
 
     def test_read_one_chunk_one_message(self):
-        raw_answer = b'$10\r\nXXXXXXXXXX\r\n'
-        answer = 'XXXXXXXXXX'
+        raw_answer = '$10\r\nXXXXXXXXXX\r\n'
+        answer = u'XXXXXXXXXX'
 
         sock_mock = Mock()
         sock_mock.recv.side_effect = [raw_answer]
@@ -381,7 +382,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -390,9 +391,9 @@ class TestConnectionUnit(TestCase):
         self.assertEqual(result, answer)
 
     def test_read_two_chunks_one_message(self):
-        raw_answer1 = b'$10\r\nXXX'
-        raw_answer2 = b'XXXXXXX\r\n'
-        answer = 'XXXXXXXXXX'
+        raw_answer1 = '$10\r\nXXX'
+        raw_answer2 = 'XXXXXXX\r\n'
+        answer = u'XXXXXXXXXX'
 
         sock_mock = Mock()
         sock_mock.recv.side_effect = [raw_answer1, raw_answer2]
@@ -401,7 +402,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -410,8 +411,8 @@ class TestConnectionUnit(TestCase):
         self.assertEqual(result, answer)
 
     def test_read_one_chunk_two_messages(self):
-        raw_answer = b'$10\r\nXXXXXXXXXX\r\n$10\r\nYYYYYYYYYY\r\n'
-        answer = 'XXXXXXXXXX'
+        raw_answer = '$10\r\nXXXXXXXXXX\r\n$10\r\nYYYYYYYYYY\r\n'
+        answer = u'XXXXXXXXXX'
 
         sock_mock = Mock()
         sock_mock.recv.side_effect = [raw_answer]
@@ -420,7 +421,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -429,9 +430,9 @@ class TestConnectionUnit(TestCase):
         self.assertEqual(result, answer)
 
     def test_read_message_ready_from_previous_chunck(self):
-        raw_answer = b'$10\r\nXXXXXXXXXX\r\n$10\r\nYYYYYYYYYY\r\n'
-        answer1 = 'XXXXXXXXXX'
-        answer2 = 'YYYYYYYYYY'
+        raw_answer = '$10\r\nXXXXXXXXXX\r\n$10\r\nYYYYYYYYYY\r\n'
+        answer1 = u'XXXXXXXXXX'
+        answer2 = u'YYYYYYYYYY'
 
         sock_mock = Mock()
         sock_mock.recv.side_effect = [raw_answer]
@@ -440,7 +441,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -460,7 +461,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -477,7 +478,7 @@ class TestConnectionUnit(TestCase):
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -487,13 +488,13 @@ class TestConnectionUnit(TestCase):
 
     def test_read_exception_connection_lost(self):
         sock_mock = Mock()
-        sock_mock.recv.side_effect = ['']
+        sock_mock.recv.side_effect = [u'']
         self.socket_mock.socket.return_value = sock_mock
 
         reader_mock = Mock()
         self.reader_mock.return_value = reader_mock
 
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._authenticate = Mock()
         connection._setdb = Mock()
         pyredis.connection.Reader = Reader
@@ -502,19 +503,19 @@ class TestConnectionUnit(TestCase):
         self.assertTrue(connection.closed)
 
     def test_read_exception_result_raise(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._sock = True
 
         reader_mock = Mock()
-        reader_mock.gets.return_value = ReplyError('blub')
+        reader_mock.gets.return_value = ReplyError(u'blub')
         connection._reader = reader_mock
         self.assertRaises(ReplyError, connection.read)
 
     def test_read_exception_result_no_raise(self):
-        connection = pyredis.connection.Connection(host='127.0.0.1', encoding='utf-8')
+        connection = pyredis.connection.Connection(host=u'127.0.0.1', encoding=u'utf-8')
         connection._sock = True
 
         reader_mock = Mock()
-        reader_mock.gets.return_value = ReplyError('blub')
+        reader_mock.gets.return_value = ReplyError(u'blub')
         connection._reader = reader_mock
         connection.read(raise_on_result_err=False)
