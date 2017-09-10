@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from unittest import TestCase
 from unittest.mock import Mock, MagicMock, PropertyMock, call, patch
 
@@ -25,16 +26,16 @@ class TestBasePoolUnit(TestCase):
         lock_mock = Mock()
         pool = pyredis.pool.BasePool(
             database=1,
-            password='blubber',
-            encoding='UTF-8',
+            password=u'blubber',
+            encoding=u'UTF-8',
             conn_timeout=23,
             read_timeout=12,
             pool_size=123,
             lock=lock_mock
         )
         self.assertEqual(pool.database, 1)
-        self.assertEqual(pool.password, 'blubber')
-        self.assertEqual(pool.encoding, 'UTF-8')
+        self.assertEqual(pool.password, u'blubber')
+        self.assertEqual(pool.encoding, u'UTF-8')
         self.assertEqual(pool.conn_timeout, 23)
         self.assertEqual(pool.read_timeout, 12)
         self.assertEqual(pool.pool_size, 123)
@@ -71,7 +72,7 @@ class TestBasePoolUnit(TestCase):
 
     def test_acquire_exhausted(self):
         self.pool.pool_size = 1
-        self.pool._pool_used.add('a Connection')
+        self.pool._pool_used.add(u'a Connection')
 
         self.pool._lock = Mock()
 
@@ -177,13 +178,13 @@ class TestBasePoolUnit(TestCase):
 
 class TestClusterPoolUnit(TestCase):
     def setUp(self):
-        client_patcher = patch('pyredis.pool.ClusterClient', autospeck=True)
+        client_patcher = patch(u'pyredis.pool.ClusterClient', autospeck=True)
         self.client_mock = client_patcher.start()
 
         self.client_mock_inst = Mock()
         self.client_mock.return_value = self.client_mock_inst
 
-        map_patcher = patch('pyredis.pool.ClusterMap', autospeck=True)
+        map_patcher = patch(u'pyredis.pool.ClusterMap', autospeck=True)
         self.map_mock = map_patcher.start()
 
         self.map_mock_inst = Mock()
@@ -191,16 +192,16 @@ class TestClusterPoolUnit(TestCase):
 
         self.addCleanup(patch.stopall)
 
-        self.pool = pyredis.pool.ClusterPool(seeds=[('seed1', 12345), ('seed2', 12345), ('seed3', 12345)])
+        self.pool = pyredis.pool.ClusterPool(seeds=[(u'seed1', 12345), (u'seed2', 12345), (u'seed3', 12345)])
 
     def test___init__(self):
-        self.map_mock.assert_called_with(seeds=[('seed1', 12345), ('seed2', 12345), ('seed3', 12345)])
+        self.map_mock.assert_called_with(seeds=[(u'seed1', 12345), (u'seed2', 12345), (u'seed3', 12345)])
         self.assertEqual(self.pool._map, self.map_mock_inst)
         self.assertFalse(self.pool.slave_ok)
 
     def test___init__slave_ok_true(self):
-        self.pool = pyredis.pool.ClusterPool(seeds=[('seed1', 12345), ('seed2', 12345), ('seed3', 12345)], slave_ok=True)
-        self.map_mock.assert_called_with(seeds=[('seed1', 12345), ('seed2', 12345), ('seed3', 12345)])
+        self.pool = pyredis.pool.ClusterPool(seeds=[(u'seed1', 12345), (u'seed2', 12345), (u'seed3', 12345)], slave_ok=True)
+        self.map_mock.assert_called_with(seeds=[(u'seed1', 12345), (u'seed2', 12345), (u'seed3', 12345)])
         self.assertEqual(self.pool._map, self.map_mock_inst)
         self.assertTrue(self.pool.slave_ok)
 
@@ -219,10 +220,10 @@ class TestClusterPoolUnit(TestCase):
 
 class TestHashPoolUnit(TestCase):
     def setUp(self):
-        client_patcher = patch('pyredis.pool.HashClient', autospeck=True)
+        client_patcher = patch(u'pyredis.pool.HashClient', autospeck=True)
         self.client_mock = client_patcher.start()
         self.addCleanup(patch.stopall)
-        self.buckets = [('localhost', 7001), ('localhost', 7002), ('localhost', 7003)]
+        self.buckets = [(u'localhost', 7001), (u'localhost', 7002), (u'localhost', 7003)]
 
         self.pool = pyredis.pool.HashPool(buckets=self.buckets)
 
@@ -247,26 +248,26 @@ class TestHashPoolUnit(TestCase):
 
 class TestPoolUnit(TestCase):
     def setUp(self):
-        client_patcher = patch('pyredis.pool.Client', autospeck=True)
+        client_patcher = patch(u'pyredis.pool.Client', autospeck=True)
         self.client_mock = client_patcher.start()
         self.addCleanup(patch.stopall)
 
-        self.pool = pyredis.pool.Pool(host='localhost')
+        self.pool = pyredis.pool.Pool(host=u'localhost')
 
     def test___init___host(self):
-        self.assertEqual(self.pool.host, 'localhost')
+        self.assertEqual(self.pool.host, u'localhost')
         self.assertEqual(self.pool.port, 6379)
         self.assertIsNone(self.pool.unix_sock)
 
     def test___init___host_port(self):
-        pool = pyredis.pool.Pool(host='localhost', port=16379)
-        self.assertEqual(pool.host, 'localhost')
+        pool = pyredis.pool.Pool(host=u'localhost', port=16379)
+        self.assertEqual(pool.host, u'localhost')
         self.assertEqual(pool.port, 16379)
         self.assertIsNone(pool.unix_sock)
 
     def test___init___unix_sock(self):
-        pool = pyredis.pool.Pool(unix_sock='/tmp/redis.sock')
-        self.assertEqual(pool.unix_sock, '/tmp/redis.sock')
+        pool = pyredis.pool.Pool(unix_sock=u'/tmp/redis.sock')
+        self.assertEqual(pool.unix_sock, u'/tmp/redis.sock')
         self.assertIsNone(pool.host)
 
     def test__init___no_host_or_unix_sock(self):
@@ -275,7 +276,7 @@ class TestPoolUnit(TestCase):
     def test__init___both_host_and_unix_sock(self):
         self.assertRaises(
             PyRedisError, pyredis.pool.Pool,
-            host='localhost', unix_sock='/tmp/redis.sock')
+            host=u'localhost', unix_sock=u'/tmp/redis.sock')
 
     def test__connect(self):
         client_mock = Mock()
@@ -296,47 +297,47 @@ class TestPoolUnit(TestCase):
 
 class TestSentinelPoolUnit(TestCase):
     def setUp(self):
-        client_patcher = patch('pyredis.pool.Client', autospeck=True)
+        client_patcher = patch(u'pyredis.pool.Client', autospeck=True)
         self.client_mock = client_patcher.start()
 
-        sentinelclient_patcher = patch('pyredis.pool.SentinelClient', autospeck=True)
+        sentinelclient_patcher = patch(u'pyredis.pool.SentinelClient', autospeck=True)
         self.sentinelclient_mock = sentinelclient_patcher.start()
 
         self.sentinelclientinst_mock = Mock()
         self.sentinelclient_mock.return_value = self.sentinelclientinst_mock
 
-        shuffle_mock = patch('pyredis.pool.shuffle', autospeck=True)
+        shuffle_mock = patch(u'pyredis.pool.shuffle', autospeck=True)
         self.shuffle_mock = shuffle_mock.start()
 
         self.addCleanup(patch.stopall)
 
     def test___init__default_args(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster')
-        pool._sentinel.sentinels = [('host1', 12345)]
-        self.sentinelclient_mock.assert_called_with(sentinels=[('host1', 12345)])
-        self.assertEqual(pool.name, 'mymaster')
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster')
+        pool._sentinel.sentinels = [(u'host1', 12345)]
+        self.sentinelclient_mock.assert_called_with(sentinels=[(u'host1', 12345)])
+        self.assertEqual(pool.name, u'mymaster')
         self.assertEqual(pool.retries, 3)
         self.assertFalse(pool.slave_ok)
-        self.assertEqual(pool.sentinels, [('host1', 12345)])
+        self.assertEqual(pool.sentinels, [(u'host1', 12345)])
         self.assertEqual(pool._sentinel, self.sentinelclientinst_mock)
 
     def test___init__default_cust_args(self):
         pool = pyredis.pool.SentinelPool(
-            sentinels=[('host1', 12345)],
-            name='mymaster',
+            sentinels=[(u'host1', 12345)],
+            name=u'mymaster',
             slave_ok=True,
             retries=5
         )
-        pool._sentinel.sentinels = [('host1', 12345)]
-        self.sentinelclient_mock.assert_called_with(sentinels=[('host1', 12345)])
-        self.assertEqual(pool.name, 'mymaster')
+        pool._sentinel.sentinels = [(u'host1', 12345)]
+        self.sentinelclient_mock.assert_called_with(sentinels=[(u'host1', 12345)])
+        self.assertEqual(pool.name, u'mymaster')
         self.assertEqual(pool.retries, 5)
         self.assertTrue(pool.slave_ok)
-        self.assertEqual(pool.sentinels, [('host1', 12345)])
+        self.assertEqual(pool.sentinels, [(u'host1', 12345)])
         self.assertEqual(pool._sentinel, self.sentinelclientinst_mock)
 
     def test__connect_master_ok_on_first_try(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster')
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster')
         pool._get_master = Mock()
         client_mock = Mock()
         pool._get_master.return_value = client_mock
@@ -346,7 +347,7 @@ class TestSentinelPoolUnit(TestCase):
         self.assertEqual(client, client_mock)
 
     def test__connect_master_ok_on_second_try(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster')
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster')
         pool._get_master = Mock()
         client_mock = Mock()
         pool._get_master.side_effect = [None, client_mock]
@@ -359,7 +360,7 @@ class TestSentinelPoolUnit(TestCase):
         self.assertEqual(client, client_mock)
 
     def test__connect_master_retires_exhausted(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster')
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster')
         pool._get_master = Mock()
         pool._get_master.side_effect = [None, None, None]
         pool._get_slave = Mock()
@@ -371,7 +372,7 @@ class TestSentinelPoolUnit(TestCase):
         ])
 
     def test__connect_slave_ok_on_first_try(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster', slave_ok=True)
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster', slave_ok=True)
         pool._get_master = Mock()
         client_mock = Mock()
         pool._get_slave = Mock()
@@ -381,7 +382,7 @@ class TestSentinelPoolUnit(TestCase):
         self.assertEqual(client, client_mock)
 
     def test__connect_slave_ok_on_second_try(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster', slave_ok=True)
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster', slave_ok=True)
         pool._get_master = Mock()
         client_mock = Mock()
         pool._get_slave = Mock()
@@ -394,7 +395,7 @@ class TestSentinelPoolUnit(TestCase):
         self.assertEqual(client, client_mock)
 
     def test__connect_slave_retires_exhausted(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster', slave_ok=True)
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster', slave_ok=True)
         pool._get_master = Mock()
         pool._get_slave = Mock()
         pool._get_slave.side_effect = [None, None, None]
@@ -406,15 +407,15 @@ class TestSentinelPoolUnit(TestCase):
         ])
 
     def test__get_client(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster', slave_ok=True)
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster', slave_ok=True)
         client_mock = Mock()
         self.client_mock.return_value = client_mock
-        client = pool._get_client('host1', 12345)
+        client = pool._get_client(u'host1', 12345)
         self.client_mock.assert_called_with(
             read_timeout=2,
             password=None,
             conn_timeout=2,
-            host='host1',
+            host=u'host1',
             encoding=None,
             database=0,
             port=12345
@@ -422,42 +423,42 @@ class TestSentinelPoolUnit(TestCase):
         self.assertEqual(client, client_mock)
 
     def test__get_master(self):
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster')
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster')
         pool._sentinel = Mock()
         pool._sentinel.get_master.return_value = (
             {
-                b'ip': b'127.0.0.1',
-                b'port': b'12345'
+                'ip': '127.0.0.1',
+                'port': '12345'
             }
         )
         client_mock = Mock()
         pool._get_client = Mock()
         pool._get_client.return_value = client_mock
         client = pool._get_master()
-        pool._sentinel.get_master.assert_called_with('mymaster')
-        pool._get_client.assert_called_with(b'127.0.0.1', 12345)
+        pool._sentinel.get_master.assert_called_with(u'mymaster')
+        pool._get_client.assert_called_with('127.0.0.1', 12345)
         self.assertEqual(client, client_mock)
 
     def test_get_slave(self):
         self.shuffle_mock.return_value = [
-            (b'127.0.0.1', 12345),
-            (b'127.0.0.2', 12345),
-            (b'127.0.0.3', 12345)
+            ('127.0.0.1', 12345),
+            ('127.0.0.2', 12345),
+            ('127.0.0.3', 12345)
         ]
-        pool = pyredis.pool.SentinelPool(sentinels=[('host1', 12345)], name='mymaster', slave_ok=True)
+        pool = pyredis.pool.SentinelPool(sentinels=[(u'host1', 12345)], name=u'mymaster', slave_ok=True)
         pool._sentinel = Mock()
         pool._sentinel.get_slaves.return_value = [
             {
-                b'ip': b'127.0.0.1',
-                b'port': b'12345'
+                'ip': '127.0.0.1',
+                'port': '12345'
             },
             {
-                b'ip': b'127.0.0.2',
-                b'port': b'12345'
+                'ip': '127.0.0.2',
+                'port': '12345'
             },
             {
-                b'ip': b'127.0.0.3',
-                b'port': b'12345'
+                'ip': '127.0.0.3',
+                'port': '12345'
             }
         ]
         client_mock1 = Mock()
@@ -466,10 +467,10 @@ class TestSentinelPoolUnit(TestCase):
         client = pool._get_slave()
         self.shuffle_mock.assert_called_with(
             [
-                (b'127.0.0.1', 12345),
-                (b'127.0.0.2', 12345),
-                (b'127.0.0.3', 12345)
+                ('127.0.0.1', 12345),
+                ('127.0.0.2', 12345),
+                ('127.0.0.3', 12345)
             ]
         )
-        pool._get_client.assert_called_with(b'127.0.0.1', 12345)
+        pool._get_client.assert_called_with('127.0.0.1', 12345)
         self.assertEqual(client, client_mock1)
