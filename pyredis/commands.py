@@ -28,7 +28,7 @@ class Connection(BaseCommand):
     def __init__(self):
         super(Connection, self).__init__()
 
-    def echo(self, *args):
+    def echo(self, *args, shard_key=None, sock=None):
         u""" Execute ECHO Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -185,7 +185,7 @@ class Key(BaseCommand):
             return self.execute(u'EXPIREAT')
         return self.execute(u'EXPIREAT', *args)
 
-    def keys(self, *args):
+    def keys(self, *args, shard_key=None, sock=None):
         u""" Execute KEYS Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -227,7 +227,7 @@ class Key(BaseCommand):
             return self.execute(u'MOVE', *args, shard_key=args[0])
         return self.execute(u'MOVE', *args)
 
-    def object(self, *args):
+    def object(self, *args, shard_key=None, sock=None):
         u""" Execute OBJECT Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -287,7 +287,7 @@ class Key(BaseCommand):
             return self.execute(u'PTTL', *args, shard_key=args[0])
         return self.execute(u'PTTL', *args)
 
-    def randomkey(self, *args):
+    def randomkey(self, *args, shard_key=None, sock=None):
         u""" Execute RANDOMKEY Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -338,7 +338,7 @@ class Key(BaseCommand):
             return self.execute(u'RESTORE', *args, shard_key=args[0])
         return self.execute(u'RESTORE', *args)
 
-    def scan(self, *args):
+    def scan(self, *args, shard_key=None, sock=None):
         u""" Execute SCAN Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1335,7 +1335,7 @@ class Transaction(BaseCommand):
     def __init__(self):
         super(Transaction, self).__init__()
 
-    def discard(self, *args):
+    def discard(self, *args, shard_key=None, sock=None):
         u""" Execute DISCARD Command, consult Redis documentation for details.
 
         :return: result, exception
@@ -1344,7 +1344,7 @@ class Transaction(BaseCommand):
             return self.execute(u'DISCARD', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'DISCARD', *args)
 
-    def Exec(self, *args):
+    def exec(self, *args, shard_key=None, sock=None):
         u""" Execute EXEC Command, consult Redis documentation for details.
 
         :return: result, exception
@@ -1353,7 +1353,7 @@ class Transaction(BaseCommand):
             return self.execute(u'EXEC', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'EXEC', *args)
 
-    def multi(self, *args):
+    def multi(self, *args, shard_key=None, sock=None):
         u""" Execute MULTI Command, consult Redis documentation for details.
 
         :return: result, exception
@@ -1362,7 +1362,7 @@ class Transaction(BaseCommand):
             return self.execute(u'MULTI', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'MULTI', *args)
 
-    def unwatch(self, *args):
+    def unwatch(self, *args, shard_key=None, sock=None):
         u""" Execute UNWATCH Command, consult Redis documentation for details.
 
         :return: result, exception
@@ -1385,7 +1385,7 @@ class Scripting(BaseCommand):
     def __init__(self):
         super(Scripting, self).__init__()
 
-    def eval(self, *args):
+    def eval(self, *args, shard_key=None, sock=None):
         u""" Execute EVAL Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1409,7 +1409,7 @@ class Scripting(BaseCommand):
             return self.execute(u'EVAL', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'EVAL', *args)
 
-    def evalsha(self, *args):
+    def evalsha(self, *args, shard_key=None, sock=None):
         u""" Execute EVALSHA Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1433,7 +1433,7 @@ class Scripting(BaseCommand):
             return self.execute(u'EVALSHA', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'EVALSHA', *args)
 
-    def script_debug(self, *args):
+    def script_debug(self, *args, shard_key=None, sock=None):
         u""" Execute SCRIPT DEBUG Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1457,7 +1457,7 @@ class Scripting(BaseCommand):
             return self.execute(u'SCRIPT', u'DEBUG', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'SCRIPT', u'DEBUG', *args)
 
-    def script_exists(self, *args):
+    def script_exists(self, *args, shard_key=None, sock=None):
         u""" Execute SCRIPT EXISTS Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1481,7 +1481,7 @@ class Scripting(BaseCommand):
             return self.execute(u'SCRIPT', u'EXISTS', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'SCRIPT', u'EXISTS', *args)
 
-    def script_flush(self, *args):
+    def script_flush(self, *args, shard_key=None, sock=None):
         u""" Execute SCRIPT FLUSH Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1505,7 +1505,7 @@ class Scripting(BaseCommand):
             return self.execute(u'SCRIPT', u'FLUSH', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'SCRIPT', u'FLUSH', *args)
 
-    def script_kill(self, *args):
+    def script_kill(self, *args, shard_key=None, sock=None):
         u""" Execute SCRIPT KILL Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1529,7 +1529,7 @@ class Scripting(BaseCommand):
             return self.execute(u'SCRIPT', u'KILL', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'SCRIPT', u'KILL', *args)
 
-    def script_load(self, *args):
+    def script_load(self, *args, shard_key=None, sock=None):
         u""" Execute SCRIPT LOAD Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
@@ -1552,3 +1552,4 @@ class Scripting(BaseCommand):
         if self._cluster:
             return self.execute(u'SCRIPT', u'LOAD', *args, shard_key=shard_key, sock=sock)
         return self.execute(u'SCRIPT', u'LOAD', *args)
+      
