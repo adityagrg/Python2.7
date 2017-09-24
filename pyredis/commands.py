@@ -1,18 +1,18 @@
-__author__ = 'schlitzer'
+__author__ = u'schlitzer'
 
 __all__ = [
-    'Connection',
-    'Hash',
-    'HyperLogLog',
-    'Key',
-    'List',
-    'Publish',
-    'Scripting',
-    'Set',
-    'SSet',
-    'String',
-    'Subscribe',
-    'Transaction'
+    u'Connection',
+    u'Hash',
+    u'HyperLogLog',
+    u'Key',
+    u'List',
+    u'Publish',
+    u'Scripting',
+    u'Set',
+    u'SSet',
+    u'String',
+    u'Subscribe',
+    u'Transaction'
 ]
 
 
@@ -26,10 +26,10 @@ class BaseCommand(object):
 
 class Connection(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Connection, self).__init__()
 
-    def echo(self, *args, shard_key=None, sock=None):
-        """ Execute ECHO Command, consult Redis documentation for details.
+    def echo(self, *args):
+        u""" Execute ECHO Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -49,11 +49,11 @@ class Connection(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ECHO', *args, shard_key=shard_key, sock=sock)
-        return self.execute('ECHO', *args)
+            return self.execute(u'ECHO', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'ECHO', *args)
 
     def ping(self, shard_key=None, sock=None):
-        """ Execute PING Command, consult Redis documentation for details.
+        u""" Execute PING Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -73,120 +73,120 @@ class Connection(BaseCommand):
         :return: result,exception
         """
         if self._cluster:
-            return self.execute('PING', shard_key=shard_key, sock=sock)
-        return self.execute('PING')
+            return self.execute(u'PING', shard_key=shard_key, sock=sock)
+        return self.execute(u'PING')
 
 
 class Geo(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Geo, self).__init__()
 
     def geoadd(self, *args):
-        """ Execute GEOADD Command, consult Redis documentation for details.
+        u""" Execute GEOADD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEOADD', *args, shard_key=args[0])
-        return self.execute('GEOADD', *args)
+            return self.execute(u'GEOADD', *args, shard_key=args[0])
+        return self.execute(u'GEOADD', *args)
 
     def geodist(self, *args):
-        """ Execute GEODIST Command, consult Redis documentation for details.
+        u""" Execute GEODIST Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEODIST', *args, shard_key=args[0])
-        return self.execute('GEODIST', *args)
+            return self.execute(u'GEODIST', *args, shard_key=args[0])
+        return self.execute(u'GEODIST', *args)
 
     def geohash(self, *args):
-        """ Execute GEOHASH Command, consult Redis documentation for details.
+        u""" Execute GEOHASH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEOHASH', *args, shard_key=args[0])
-        return self.execute('GEOHASH', *args)
+            return self.execute(u'GEOHASH', *args, shard_key=args[0])
+        return self.execute(u'GEOHASH', *args)
 
     def georadius(self, *args):
-        """ Execute GEORADIUS Command, consult Redis documentation for details.
+        u""" Execute GEORADIUS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEORADIUS', *args, shard_key=args[0])
-        return self.execute('GEORADIUS', *args)
+            return self.execute(u'GEORADIUS', *args, shard_key=args[0])
+        return self.execute(u'GEORADIUS', *args)
 
     def geopos(self, *args):
-        """ Execute GEOPOS Command, consult Redis documentation for details.
+        u""" Execute GEOPOS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEOPOS', *args, shard_key=args[0])
-        return self.execute('GEOPOS', *args)
+            return self.execute(u'GEOPOS', *args, shard_key=args[0])
+        return self.execute(u'GEOPOS', *args)
 
     def georadiusbymember(self, *args):
-        """ Execute GEORADIUSBYMEMBER Command, consult Redis documentation for details.
+        u""" Execute GEORADIUSBYMEMBER Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GEORADIUSBYMEMBER', *args, shard_key=args[0])
-        return self.execute('GEORADIUSBYMEMBER', *args)
+            return self.execute(u'GEORADIUSBYMEMBER', *args, shard_key=args[0])
+        return self.execute(u'GEORADIUSBYMEMBER', *args)
 
 
 class Key(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Key, self).__init__()
 
     def delete(self, *args):
-        """ Execute DEL Command, consult Redis documentation for details.
+        u""" Execute DEL Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('DEL', *args, shard_key=args[0])
-        return self.execute('DEL', *args)
+            return self.execute(u'DEL', *args, shard_key=args[0])
+        return self.execute(u'DEL', *args)
 
     def dump(self, *args):
-        """ Execute DUMP Command, consult Redis documentation for details.
+        u""" Execute DUMP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('DUMP', *args, shard_key=args[0])
-        return self.execute('DUMP', *args)
+            return self.execute(u'DUMP', *args, shard_key=args[0])
+        return self.execute(u'DUMP', *args)
 
     def exists(self, *args):
-        """ Execute EXISTS Command, consult Redis documentation for details.
+        u""" Execute EXISTS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('EXISTS', *args, shard_key=args[0])
-        return self.execute('EXISTS', *args)
+            return self.execute(u'EXISTS', *args, shard_key=args[0])
+        return self.execute(u'EXISTS', *args)
 
     def expire(self, *args):
-        """ Execute EXPIRE Command, consult Redis documentation for details.
+        u""" Execute EXPIRE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('EXPIRE', *args, shard_key=args[0])
-        return self.execute('EXPIRE', *args)
+            return self.execute(u'EXPIRE', *args, shard_key=args[0])
+        return self.execute(u'EXPIRE', *args)
 
     def expireat(self, *args):
-        """ Execute EXPIREAT Command, consult Redis documentation for details.
+        u""" Execute EXPIREAT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('EXPIREAT')
-        return self.execute('EXPIREAT', *args)
+            return self.execute(u'EXPIREAT')
+        return self.execute(u'EXPIREAT', *args)
 
-    def keys(self, *args, shard_key=None, sock=None):
-        """ Execute KEYS Command, consult Redis documentation for details.
+    def keys(self, *args):
+        u""" Execute KEYS Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -206,29 +206,29 @@ class Key(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('KEYS', *args, shard_key=shard_key, sock=sock)
-        return self.execute('KEYS', *args)
+            return self.execute(u'KEYS', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'KEYS', *args)
 
     def migrate(self, *args):
-        """ Execute MIGRATE Command, consult Redis documentation for details.
+        u""" Execute MIGRATE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
             raise NotImplemented
-        return self.execute('MIGRATE', *args)
+        return self.execute(u'MIGRATE', *args)
 
     def move(self, *args):
-        """ Execute MOVE Command, consult Redis documentation for details.
+        u""" Execute MOVE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('MOVE', *args, shard_key=args[0])
-        return self.execute('MOVE', *args)
+            return self.execute(u'MOVE', *args, shard_key=args[0])
+        return self.execute(u'MOVE', *args)
 
-    def object(self, *args, shard_key=None, sock=None):
-        """ Execute OBJECT Command, consult Redis documentation for details.
+    def object(self, *args):
+        u""" Execute OBJECT Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -248,47 +248,47 @@ class Key(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('DEL', *args, shard_key=shard_key, sock=sock)
-        return self.execute('OBJECT', *args)
+            return self.execute(u'DEL', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'OBJECT', *args)
 
     def persist(self, *args):
-        """ Execute PERSIST Command, consult Redis documentation for details.
+        u""" Execute PERSIST Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PERSIST', *args, shard_key=args[0])
-        return self.execute('PERSIST', *args)
+            return self.execute(u'PERSIST', *args, shard_key=args[0])
+        return self.execute(u'PERSIST', *args)
 
     def pexpire(self, *args):
-        """ Execute PEXPIRE Command, consult Redis documentation for details.
+        u""" Execute PEXPIRE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PEXPIRE', *args, shard_key=args[0])
-        return self.execute('PEXPIRE', *args)
+            return self.execute(u'PEXPIRE', *args, shard_key=args[0])
+        return self.execute(u'PEXPIRE', *args)
 
     def pexpireat(self, *args):
-        """ Execute PEXPIREAT Command, consult Redis documentation for details.
+        u""" Execute PEXPIREAT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PEXPIREAT', *args, shard_key=args[0])
-        return self.execute('PEXPIREAT', *args)
+            return self.execute(u'PEXPIREAT', *args, shard_key=args[0])
+        return self.execute(u'PEXPIREAT', *args)
 
     def pttl(self, *args):
-        """ Execute PTTL Command, consult Redis documentation for details.
+        u""" Execute PTTL Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PTTL', *args, shard_key=args[0])
-        return self.execute('PTTL', *args)
+            return self.execute(u'PTTL', *args, shard_key=args[0])
+        return self.execute(u'PTTL', *args)
 
-    def randomkey(self, *args, shard_key=None, sock=None):
-        """ Execute RANDOMKEY Command, consult Redis documentation for details.
+    def randomkey(self, *args):
+        u""" Execute RANDOMKEY Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -308,38 +308,38 @@ class Key(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RANDOMKEY', *args, shard_key=shard_key, sock=sock)
-        return self.execute('RANDOMKEY', *args)
+            return self.execute(u'RANDOMKEY', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'RANDOMKEY', *args)
 
     def rename(self, *args):
-        """ Execute RENAME Command, consult Redis documentation for details.
+        u""" Execute RENAME Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RENAME', *args, shard_key=args[0])
-        return self.execute('RENAME', *args)
+            return self.execute(u'RENAME', *args, shard_key=args[0])
+        return self.execute(u'RENAME', *args)
 
     def renamenx(self, *args):
-        """ Execute RENAMENX Command, consult Redis documentation for details.
+        u""" Execute RENAMENX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RENAMENX', *args, shard_key=args[0])
-        return self.execute('RENAMENX', *args)
+            return self.execute(u'RENAMENX', *args, shard_key=args[0])
+        return self.execute(u'RENAMENX', *args)
 
     def restore(self, *args):
-        """ Execute RESTORE Command, consult Redis documentation for details.
+        u""" Execute RESTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RESTORE', *args, shard_key=args[0])
-        return self.execute('RESTORE', *args)
+            return self.execute(u'RESTORE', *args, shard_key=args[0])
+        return self.execute(u'RESTORE', *args)
 
-    def scan(self, *args, shard_key=None, sock=None):
-        """ Execute SCAN Command, consult Redis documentation for details.
+    def scan(self, *args):
+        u""" Execute SCAN Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -359,943 +359,943 @@ class Key(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SCAN', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCAN', *args)
+            return self.execute(u'SCAN', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCAN', *args)
 
     def sort(self, *args):
-        """ Execute SORT Command, consult Redis documentation for details.
+        u""" Execute SORT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SORT', *args, shard_key=args[0])
-        return self.execute('SORT', *args)
+            return self.execute(u'SORT', *args, shard_key=args[0])
+        return self.execute(u'SORT', *args)
 
     def ttl(self, *args):
-        """ Execute TTL Command, consult Redis documentation for details.
+        u""" Execute TTL Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('TTL', *args, shard_key=args[0])
-        return self.execute('TTL', *args)
+            return self.execute(u'TTL', *args, shard_key=args[0])
+        return self.execute(u'TTL', *args)
 
     def type(self, *args):
-        """ Execute TYPE Command, consult Redis documentation for details.
+        u""" Execute TYPE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('TYPE', *args, shard_key=args[0])
-        return self.execute('TYPE', *args)
+            return self.execute(u'TYPE', *args, shard_key=args[0])
+        return self.execute(u'TYPE', *args)
 
     def wait(self, *args):
-        """ Execute WAIT Command, consult Redis documentation for details.
+        u""" Execute WAIT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('WAIT', *args, shard_key=args[0])
-        return self.execute('WAIT', *args)
+            return self.execute(u'WAIT', *args, shard_key=args[0])
+        return self.execute(u'WAIT', *args)
 
 
 class String(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(String, self).__init__()
 
     def append(self, *args):
-        """ Execute APPEND Command, consult Redis documentation for details.
+        u""" Execute APPEND Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('APPEND', *args, shard_key=args[0])
-        return self.execute('APPEND', *args)
+            return self.execute(u'APPEND', *args, shard_key=args[0])
+        return self.execute(u'APPEND', *args)
 
     def bitcount(self, *args):
-        """ Execute BITCOUNT Command, consult Redis documentation for details.
+        u""" Execute BITCOUNT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BITCOUNT', *args, shard_key=args[0])
-        return self.execute('BITCOUNT', *args)
+            return self.execute(u'BITCOUNT', *args, shard_key=args[0])
+        return self.execute(u'BITCOUNT', *args)
 
     def bitfield(self, *args):
-        """ Execute BITFIELD Command, consult Redis documentation for details.
+        u""" Execute BITFIELD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BITFIELD', *args, shard_key=args[0])
-        return self.execute('BITFIELD', *args)
+            return self.execute(u'BITFIELD', *args, shard_key=args[0])
+        return self.execute(u'BITFIELD', *args)
 
     def bitop(self, *args):
-        """ Execute BITOP Command, consult Redis documentation for details.
+        u""" Execute BITOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BITOP', *args, shard_key=args[1])
-        return self.execute('BITOP', *args)
+            return self.execute(u'BITOP', *args, shard_key=args[1])
+        return self.execute(u'BITOP', *args)
 
     def bitpos(self, *args):
-        """ Execute BITPOS Command, consult Redis documentation for details.
+        u""" Execute BITPOS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BITPOS', *args, shard_key=args[0])
-        return self.execute('BITPOS', *args)
+            return self.execute(u'BITPOS', *args, shard_key=args[0])
+        return self.execute(u'BITPOS', *args)
 
     def decr(self, *args):
-        """ Execute DECR Command, consult Redis documentation for details.
+        u""" Execute DECR Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('DECR', *args, shard_key=args[0])
-        return self.execute('DECR', *args)
+            return self.execute(u'DECR', *args, shard_key=args[0])
+        return self.execute(u'DECR', *args)
 
     def decrby(self, *args):
-        """ Execute DECRBY Command, consult Redis documentation for details.
+        u""" Execute DECRBY Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('DECRBY', *args, shard_key=args[0])
-        return self.execute('DECRBY', *args)
+            return self.execute(u'DECRBY', *args, shard_key=args[0])
+        return self.execute(u'DECRBY', *args)
 
     def get(self, *args):
-        """ Execute GET Command, consult Redis documentation for details.
+        u""" Execute GET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GET', *args, shard_key=args[0])
-        return self.execute('GET', *args)
+            return self.execute(u'GET', *args, shard_key=args[0])
+        return self.execute(u'GET', *args)
 
     def getbit(self, *args):
-        """ Execute GETBIT Command, consult Redis documentation for details.
+        u""" Execute GETBIT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GETBIT', *args, shard_key=args[0])
-        return self.execute('GETBIT', *args)
+            return self.execute(u'GETBIT', *args, shard_key=args[0])
+        return self.execute(u'GETBIT', *args)
 
     def getrange(self, *args):
-        """ Execute GETRANGE Command, consult Redis documentation for details.
+        u""" Execute GETRANGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GETRANGE', *args, shard_key=args[0])
-        return self.execute('GETRANGE', *args)
+            return self.execute(u'GETRANGE', *args, shard_key=args[0])
+        return self.execute(u'GETRANGE', *args)
 
     def getset(self, *args):
-        """ Execute GETSET Command, consult Redis documentation for details.
+        u""" Execute GETSET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('GETSET', *args, shard_key=args[0])
-        return self.execute('GETSET', *args)
+            return self.execute(u'GETSET', *args, shard_key=args[0])
+        return self.execute(u'GETSET', *args)
 
     def incr(self, *args):
-        """ Execute INCR Command, consult Redis documentation for details.
+        u""" Execute INCR Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('INCR', *args, shard_key=args[0])
-        return self.execute('INCR', *args)
+            return self.execute(u'INCR', *args, shard_key=args[0])
+        return self.execute(u'INCR', *args)
 
     def incrby(self, *args):
-        """ Execute INCRBY Command, consult Redis documentation for details.
+        u""" Execute INCRBY Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('INCRBY', *args, shard_key=args[0])
-        return self.execute('INCRBY', *args)
+            return self.execute(u'INCRBY', *args, shard_key=args[0])
+        return self.execute(u'INCRBY', *args)
 
     def incrbyfloat(self, *args):
-        """ Execute INCRBYFLOAT Command, consult Redis documentation for details.
+        u""" Execute INCRBYFLOAT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('INCRBYFLOAT', *args, shard_key=args[0])
-        return self.execute('INCRBYFLOAT', *args)
+            return self.execute(u'INCRBYFLOAT', *args, shard_key=args[0])
+        return self.execute(u'INCRBYFLOAT', *args)
 
     def mget(self, *args):
-        """ Execute MGET Command, consult Redis documentation for details.
+        u""" Execute MGET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('MGET', *args, shard_key=args[0])
-        return self.execute('MGET', *args)
+            return self.execute(u'MGET', *args, shard_key=args[0])
+        return self.execute(u'MGET', *args)
 
     def mset(self, *args):
-        """ Execute MSET Command, consult Redis documentation for details.
+        u""" Execute MSET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('MSET', *args, shard_key=args[0])
-        return self.execute('MSET', *args)
+            return self.execute(u'MSET', *args, shard_key=args[0])
+        return self.execute(u'MSET', *args)
 
     def msetnx(self, *args):
-        """ Execute MSETNX Command, consult Redis documentation for details.
+        u""" Execute MSETNX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('MSETNX', *args, shard_key=args[0])
-        return self.execute('MSETNX', *args)
+            return self.execute(u'MSETNX', *args, shard_key=args[0])
+        return self.execute(u'MSETNX', *args)
 
     def psetex(self, *args):
-        """ Execute PSETEX Command, consult Redis documentation for details.
+        u""" Execute PSETEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PSETEX', *args, shard_key=args[0])
-        return self.execute('PSETEX', *args)
+            return self.execute(u'PSETEX', *args, shard_key=args[0])
+        return self.execute(u'PSETEX', *args)
 
     def set(self, *args):
-        """ Execute SET Command, consult Redis documentation for details.
+        u""" Execute SET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SET', *args, shard_key=args[0])
-        return self.execute('SET', *args)
+            return self.execute(u'SET', *args, shard_key=args[0])
+        return self.execute(u'SET', *args)
 
     def setbit(self, *args):
-        """ Execute SETBIT Command, consult Redis documentation for details.
+        u""" Execute SETBIT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SETBIT', *args, shard_key=args[0])
-        return self.execute('SETBIT', *args)
+            return self.execute(u'SETBIT', *args, shard_key=args[0])
+        return self.execute(u'SETBIT', *args)
 
     def setex(self, *args):
-        """ Execute SETEX Command, consult Redis documentation for details.
+        u""" Execute SETEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SETEX', *args, shard_key=args[0])
-        return self.execute('SETEX', *args)
+            return self.execute(u'SETEX', *args, shard_key=args[0])
+        return self.execute(u'SETEX', *args)
 
     def setnx(self, *args):
-        """ Execute SETNX Command, consult Redis documentation for details.
+        u""" Execute SETNX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SETNX', *args, shard_key=args[0])
-        return self.execute('SETNX', *args)
+            return self.execute(u'SETNX', *args, shard_key=args[0])
+        return self.execute(u'SETNX', *args)
 
     def setrange(self, *args):
-        """ Execute SETRANGE Command, consult Redis documentation for details.
+        u""" Execute SETRANGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SETRANGE', *args, shard_key=args[0])
-        return self.execute('SETRANGE', *args)
+            return self.execute(u'SETRANGE', *args, shard_key=args[0])
+        return self.execute(u'SETRANGE', *args)
 
     def strlen(self, *args):
-        """ Execute STRLEN Command, consult Redis documentation for details.
+        u""" Execute STRLEN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('STRLEN', *args, shard_key=args[0])
-        return self.execute('STRLEN', *args)
+            return self.execute(u'STRLEN', *args, shard_key=args[0])
+        return self.execute(u'STRLEN', *args)
 
 
 class Hash(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Hash, self).__init__()
 
     def hdel(self, *args):
-        """ Execute HDEL Command, consult Redis documentation for details.
+        u""" Execute HDEL Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HDEL', *args, shard_key=args[0])
-        return self.execute('HDEL', *args)
+            return self.execute(u'HDEL', *args, shard_key=args[0])
+        return self.execute(u'HDEL', *args)
 
     def hexists(self, *args):
-        """ Execute HEXISTS Command, consult Redis documentation for details.
+        u""" Execute HEXISTS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HEXISTS', *args, shard_key=args[0])
-        return self.execute('HEXISTS', *args)
+            return self.execute(u'HEXISTS', *args, shard_key=args[0])
+        return self.execute(u'HEXISTS', *args)
 
     def hget(self, *args):
-        """ Execute HGET Command, consult Redis documentation for details.
+        u""" Execute HGET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HGET', *args, shard_key=args[0])
-        return self.execute('HGET', *args)
+            return self.execute(u'HGET', *args, shard_key=args[0])
+        return self.execute(u'HGET', *args)
 
     def hgetall(self, *args):
-        """ Execute HGETALL Command, consult Redis documentation for details.
+        u""" Execute HGETALL Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HGETALL', *args, shard_key=args[0])
-        return self.execute('HGETALL', *args)
+            return self.execute(u'HGETALL', *args, shard_key=args[0])
+        return self.execute(u'HGETALL', *args)
 
     def hincrby(self, *args):
-        """ Execute HINCRBY Command, consult Redis documentation for details.
+        u""" Execute HINCRBY Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HINCRBY', *args, shard_key=args[0])
-        return self.execute('HINCRBY', *args)
+            return self.execute(u'HINCRBY', *args, shard_key=args[0])
+        return self.execute(u'HINCRBY', *args)
 
     def hincrbyfloat(self, *args):
-        """ Execute HINCRBYFLOAT Command, consult Redis documentation for details.
+        u""" Execute HINCRBYFLOAT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HINCRBYFLOAT', *args, shard_key=args[0])
-        return self.execute('HINCRBYFLOAT', *args)
+            return self.execute(u'HINCRBYFLOAT', *args, shard_key=args[0])
+        return self.execute(u'HINCRBYFLOAT', *args)
 
     def hkeys(self, *args):
-        """ Execute HKEYS Command, consult Redis documentation for details.
+        u""" Execute HKEYS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HKEYS', *args, shard_key=args[0])
-        return self.execute('HKEYS', *args)
+            return self.execute(u'HKEYS', *args, shard_key=args[0])
+        return self.execute(u'HKEYS', *args)
 
     def hlen(self, *args):
-        """ Execute HLEN Command, consult Redis documentation for details.
+        u""" Execute HLEN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HLEN', *args, shard_key=args[0])
-        return self.execute('HLEN', *args)
+            return self.execute(u'HLEN', *args, shard_key=args[0])
+        return self.execute(u'HLEN', *args)
 
     def hmget(self, *args):
-        """ Execute HMGET Command, consult Redis documentation for details.
+        u""" Execute HMGET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HMGET', *args, shard_key=args[0])
-        return self.execute('HMGET', *args)
+            return self.execute(u'HMGET', *args, shard_key=args[0])
+        return self.execute(u'HMGET', *args)
 
     def hmset(self, *args):
-        """ Execute HMSET Command, consult Redis documentation for details.
+        u""" Execute HMSET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HMSET', *args, shard_key=args[0])
-        return self.execute('HMSET', *args)
+            return self.execute(u'HMSET', *args, shard_key=args[0])
+        return self.execute(u'HMSET', *args)
 
     def hset(self, *args):
-        """ Execute HSET Command, consult Redis documentation for details.
+        u""" Execute HSET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HSET', *args, shard_key=args[0])
-        return self.execute('HSET', *args)
+            return self.execute(u'HSET', *args, shard_key=args[0])
+        return self.execute(u'HSET', *args)
 
     def hsetnx(self, *args):
-        """ Execute HSETNX Command, consult Redis documentation for details.
+        u""" Execute HSETNX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HSETNX', *args, shard_key=args[0])
-        return self.execute('HSETNX', *args)
+            return self.execute(u'HSETNX', *args, shard_key=args[0])
+        return self.execute(u'HSETNX', *args)
 
     def hstrlen(self, *args):
-        """ Execute HSTRLEN Command, consult Redis documentation for details.
+        u""" Execute HSTRLEN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HSTRLEN', *args, shard_key=args[0])
-        return self.execute('HSTRLEN', *args)
+            return self.execute(u'HSTRLEN', *args, shard_key=args[0])
+        return self.execute(u'HSTRLEN', *args)
 
     def hvals(self, *args):
-        """ Execute HVALS Command, consult Redis documentation for details.
+        u""" Execute HVALS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HVALS', *args, shard_key=args[0])
-        return self.execute('HVALS', *args)
+            return self.execute(u'HVALS', *args, shard_key=args[0])
+        return self.execute(u'HVALS', *args)
 
     def hscan(self, *args):
-        """ Execute HSCAN Command, consult Redis documentation for details.
+        u""" Execute HSCAN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('HSCAN', *args, shard_key=args[0])
-        return self.execute('HSCAN', *args)
+            return self.execute(u'HSCAN', *args, shard_key=args[0])
+        return self.execute(u'HSCAN', *args)
 
 
 class List(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(List, self).__init__()
 
     def blpop(self, *args):
-        """ Execute BLPOP Command, consult Redis documentation for details.
+        u""" Execute BLPOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BLPOP', *args, shard_key=args[0])
-        return self.execute('BLPOP', *args)
+            return self.execute(u'BLPOP', *args, shard_key=args[0])
+        return self.execute(u'BLPOP', *args)
 
     def brpop(self, *args):
-        """ Execute BRPOP Command, consult Redis documentation for details.
+        u""" Execute BRPOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BRPOP', *args, shard_key=args[0])
-        return self.execute('BRPOP', *args)
+            return self.execute(u'BRPOP', *args, shard_key=args[0])
+        return self.execute(u'BRPOP', *args)
 
     def brpoplpush(self, *args):
-        """ Execute BRPOPPUSH Command, consult Redis documentation for details.
+        u""" Execute BRPOPPUSH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('BRPOPPUSH', *args, shard_key=args[0])
-        return self.execute('BRPOPPUSH', *args)
+            return self.execute(u'BRPOPPUSH', *args, shard_key=args[0])
+        return self.execute(u'BRPOPPUSH', *args)
 
     def lindex(self, *args):
-        """ Execute LINDEX Command, consult Redis documentation for details.
+        u""" Execute LINDEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LINDEX', *args, shard_key=args[0])
-        return self.execute('LINDEX', *args)
+            return self.execute(u'LINDEX', *args, shard_key=args[0])
+        return self.execute(u'LINDEX', *args)
 
     def linsert(self, *args):
-        """ Execute LINSERT Command, consult Redis documentation for details.
+        u""" Execute LINSERT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LINSERT', *args, shard_key=args[0])
-        return self.execute('LINSERT', *args)
+            return self.execute(u'LINSERT', *args, shard_key=args[0])
+        return self.execute(u'LINSERT', *args)
 
     def llen(self, *args):
-        """ Execute LLEN Command, consult Redis documentation for details.
+        u""" Execute LLEN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LLEN', *args, shard_key=args[0])
-        return self.execute('LLEN', *args)
+            return self.execute(u'LLEN', *args, shard_key=args[0])
+        return self.execute(u'LLEN', *args)
 
     def lpop(self, *args):
-        """ Execute LPOP Command, consult Redis documentation for details.
+        u""" Execute LPOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LPOP', *args, shard_key=args[0])
-        return self.execute('LPOP', *args)
+            return self.execute(u'LPOP', *args, shard_key=args[0])
+        return self.execute(u'LPOP', *args)
 
     def lpush(self, *args):
-        """ Execute LPUSH Command, consult Redis documentation for details.
+        u""" Execute LPUSH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LPUSH', *args, shard_key=args[0])
-        return self.execute('LPUSH', *args)
+            return self.execute(u'LPUSH', *args, shard_key=args[0])
+        return self.execute(u'LPUSH', *args)
 
     def lpushx(self, *args):
-        """ Execute LPUSHX Command, consult Redis documentation for details.
+        u""" Execute LPUSHX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LPUSHX', *args, shard_key=args[0])
-        return self.execute('LPUSHX', *args)
+            return self.execute(u'LPUSHX', *args, shard_key=args[0])
+        return self.execute(u'LPUSHX', *args)
 
     def lrange(self, *args):
-        """ Execute LRANGE Command, consult Redis documentation for details.
+        u""" Execute LRANGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LRANGE', *args, shard_key=args[0])
-        return self.execute('LRANGE', *args)
+            return self.execute(u'LRANGE', *args, shard_key=args[0])
+        return self.execute(u'LRANGE', *args)
 
     def lrem(self, *args):
-        """ Execute LREM Command, consult Redis documentation for details.
+        u""" Execute LREM Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LREM', *args, shard_key=args[0])
-        return self.execute('LREM', *args)
+            return self.execute(u'LREM', *args, shard_key=args[0])
+        return self.execute(u'LREM', *args)
 
     def lset(self, *args):
-        """ Execute LSET Command, consult Redis documentation for details.
+        u""" Execute LSET Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LSET', *args, shard_key=args[0])
-        return self.execute('LSET', *args)
+            return self.execute(u'LSET', *args, shard_key=args[0])
+        return self.execute(u'LSET', *args)
 
     def ltrim(self, *args):
-        """ Execute LTRIM Command, consult Redis documentation for details.
+        u""" Execute LTRIM Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('LTRIM', *args, shard_key=args[0])
-        return self.execute('LTRIM', *args)
+            return self.execute(u'LTRIM', *args, shard_key=args[0])
+        return self.execute(u'LTRIM', *args)
 
     def rpop(self, *args):
-        """ Execute RPOP Command, consult Redis documentation for details.
+        u""" Execute RPOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RPOP', *args, shard_key=args[0])
-        return self.execute('RPOP', *args)
+            return self.execute(u'RPOP', *args, shard_key=args[0])
+        return self.execute(u'RPOP', *args)
 
     def rpoplpush(self, *args):
-        """ Execute RPOPLPUSH Command, consult Redis documentation for details.
+        u""" Execute RPOPLPUSH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RPOPLPUSH', *args, shard_key=args[0])
-        return self.execute('RPOPLPUSH', *args)
+            return self.execute(u'RPOPLPUSH', *args, shard_key=args[0])
+        return self.execute(u'RPOPLPUSH', *args)
 
     def rpush(self, *args):
-        """ Execute RPUSH Command, consult Redis documentation for details.
+        u""" Execute RPUSH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RPUSH', *args, shard_key=args[0])
-        return self.execute('RPUSH', *args)
+            return self.execute(u'RPUSH', *args, shard_key=args[0])
+        return self.execute(u'RPUSH', *args)
 
     def rpushx(self, *args):
-        """ Execute RPUSHX Command, consult Redis documentation for details.
+        u""" Execute RPUSHX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('RPUSHX', *args, shard_key=args[0])
-        return self.execute('RPUSHX', *args)
+            return self.execute(u'RPUSHX', *args, shard_key=args[0])
+        return self.execute(u'RPUSHX', *args)
 
 
 class Set(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Set, self).__init__()
 
     def sadd(self, *args):
-        """ Execute SADD Command, consult Redis documentation for details.
+        u""" Execute SADD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SADD', *args, shard_key=args[0])
-        return self.execute('SADD', *args)
+            return self.execute(u'SADD', *args, shard_key=args[0])
+        return self.execute(u'SADD', *args)
 
     def scard(self, *args):
-        """ Execute SCARD Command, consult Redis documentation for details.
+        u""" Execute SCARD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SCARD', *args, shard_key=args[0])
-        return self.execute('SCARD', *args)
+            return self.execute(u'SCARD', *args, shard_key=args[0])
+        return self.execute(u'SCARD', *args)
 
     def sdiff(self, *args):
-        """ Execute SDIFF Command, consult Redis documentation for details.
+        u""" Execute SDIFF Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SDIFF', *args, shard_key=args[0])
-        return self.execute('SDIFF', *args)
+            return self.execute(u'SDIFF', *args, shard_key=args[0])
+        return self.execute(u'SDIFF', *args)
 
     def sdiffstore(self, *args):
-        """ Execute SDIFFSTORE Command, consult Redis documentation for details.
+        u""" Execute SDIFFSTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SDIFFSTORE', *args, shard_key=args[0])
-        return self.execute('SDIFFSTORE', *args)
+            return self.execute(u'SDIFFSTORE', *args, shard_key=args[0])
+        return self.execute(u'SDIFFSTORE', *args)
 
     def sinter(self, *args):
-        """ Execute SINTER Command, consult Redis documentation for details.
+        u""" Execute SINTER Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SINTER', *args, shard_key=args[0])
-        return self.execute('SINTER', *args)
+            return self.execute(u'SINTER', *args, shard_key=args[0])
+        return self.execute(u'SINTER', *args)
 
     def sinterstore(self, *args):
-        """ Execute SINTERSTORE Command, consult Redis documentation for details.
+        u""" Execute SINTERSTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SINTERSTORE', *args, shard_key=args[0])
-        return self.execute('SINTERSTORE', *args)
+            return self.execute(u'SINTERSTORE', *args, shard_key=args[0])
+        return self.execute(u'SINTERSTORE', *args)
 
     def sismember(self, *args):
-        """ Execute SISMEMBER Command, consult Redis documentation for details.
+        u""" Execute SISMEMBER Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SISMEMBER', *args, shard_key=args[0])
-        return self.execute('SISMEMBER', *args)
+            return self.execute(u'SISMEMBER', *args, shard_key=args[0])
+        return self.execute(u'SISMEMBER', *args)
 
     def smembers(self, *args):
-        """ Execute SMEMBERS Command, consult Redis documentation for details.
+        u""" Execute SMEMBERS Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SMEMBERS', *args, shard_key=args[0])
-        return self.execute('SMEMBERS', *args)
+            return self.execute(u'SMEMBERS', *args, shard_key=args[0])
+        return self.execute(u'SMEMBERS', *args)
 
     def smove(self, *args):
-        """ Execute SMOVE Command, consult Redis documentation for details.
+        u""" Execute SMOVE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SMOVE', *args, shard_key=args[0])
-        return self.execute('SMOVE', *args)
+            return self.execute(u'SMOVE', *args, shard_key=args[0])
+        return self.execute(u'SMOVE', *args)
 
     def spop(self, *args):
-        """ Execute SPOP Command, consult Redis documentation for details.
+        u""" Execute SPOP Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SPOP', *args, shard_key=args[0])
-        return self.execute('SPOP', *args)
+            return self.execute(u'SPOP', *args, shard_key=args[0])
+        return self.execute(u'SPOP', *args)
 
     def srandmember(self, *args):
-        """ Execute SRANDMEMBER Command, consult Redis documentation for details.
+        u""" Execute SRANDMEMBER Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SRANDMEMBER', *args, shard_key=args[0])
-        return self.execute('SRANDMEMBER', *args)
+            return self.execute(u'SRANDMEMBER', *args, shard_key=args[0])
+        return self.execute(u'SRANDMEMBER', *args)
 
     def srem(self, *args):
-        """ Execute SREM Command, consult Redis documentation for details.
+        u""" Execute SREM Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SREM', *args, shard_key=args[0])
-        return self.execute('SREM', *args)
+            return self.execute(u'SREM', *args, shard_key=args[0])
+        return self.execute(u'SREM', *args)
 
     def sunion(self, *args):
-        """ Execute SUNION Command, consult Redis documentation for details.
+        u""" Execute SUNION Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SUNION', *args, shard_key=args[0])
-        return self.execute('SUNION', *args)
+            return self.execute(u'SUNION', *args, shard_key=args[0])
+        return self.execute(u'SUNION', *args)
 
     def sunoinstore(self, *args):
-        """ Execute SUNIONSTORE Command, consult Redis documentation for details.
+        u""" Execute SUNIONSTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SUNIONSTORE', *args, shard_key=args[0])
-        return self.execute('SUNIONSTORE', *args)
+            return self.execute(u'SUNIONSTORE', *args, shard_key=args[0])
+        return self.execute(u'SUNIONSTORE', *args)
 
     def sscan(self, *args):
-        """ Execute SSCAN Command, consult Redis documentation for details.
+        u""" Execute SSCAN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SSCAN', *args, shard_key=args[0])
-        return self.execute('SSCAN', *args)
+            return self.execute(u'SSCAN', *args, shard_key=args[0])
+        return self.execute(u'SSCAN', *args)
 
 
 class SSet(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(SSet, self).__init__()
 
     def zadd(self, *args):
-        """ Execute ZADD Command, consult Redis documentation for details.
+        u""" Execute ZADD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZADD', *args, shard_key=args[0])
-        return self.execute('ZADD', *args)
+            return self.execute(u'ZADD', *args, shard_key=args[0])
+        return self.execute(u'ZADD', *args)
 
     def zcard(self, *args):
-        """ Execute ZCARD Command, consult Redis documentation for details.
+        u""" Execute ZCARD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZCARD', *args, shard_key=args[0])
-        return self.execute('ZCARD', *args)
+            return self.execute(u'ZCARD', *args, shard_key=args[0])
+        return self.execute(u'ZCARD', *args)
 
     def zcount(self, *args):
-        """ Execute ZCOUNT Command, consult Redis documentation for details.
+        u""" Execute ZCOUNT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZCOUNT', *args, shard_key=args[0])
-        return self.execute('ZCOUNT', *args)
+            return self.execute(u'ZCOUNT', *args, shard_key=args[0])
+        return self.execute(u'ZCOUNT', *args)
 
     def zincrby(self, *args):
-        """ Execute ZINCRBY Command, consult Redis documentation for details.
+        u""" Execute ZINCRBY Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZINCRBY', *args, shard_key=args[0])
-        return self.execute('ZINCRBY', *args)
+            return self.execute(u'ZINCRBY', *args, shard_key=args[0])
+        return self.execute(u'ZINCRBY', *args)
 
     def zinterstore(self, *args):
-        """ Execute ZINTERSTORE Command, consult Redis documentation for details.
+        u""" Execute ZINTERSTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZINTERSTORE', *args, shard_key=args[0])
-        return self.execute('ZINTERSTORE', *args)
+            return self.execute(u'ZINTERSTORE', *args, shard_key=args[0])
+        return self.execute(u'ZINTERSTORE', *args)
 
     def zlexcount(self, *args):
-        """ Execute ZLEXCOUNT Command, consult Redis documentation for details.
+        u""" Execute ZLEXCOUNT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZLEXCOUNT', *args, shard_key=args[0])
-        return self.execute('ZLEXCOUNT', *args)
+            return self.execute(u'ZLEXCOUNT', *args, shard_key=args[0])
+        return self.execute(u'ZLEXCOUNT', *args)
 
     def zrange(self, *args):
-        """ Execute ZRANGE Command, consult Redis documentation for details.
+        u""" Execute ZRANGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZRANGE', *args, shard_key=args[0])
-        return self.execute('ZRANGE', *args)
+            return self.execute(u'ZRANGE', *args, shard_key=args[0])
+        return self.execute(u'ZRANGE', *args)
 
     def zrangebylex(self, *args):
-        """ Execute ZRANGEBYLEX Command, consult Redis documentation for details.
+        u""" Execute ZRANGEBYLEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZRANGEBYLEX', *args, shard_key=args[0])
-        return self.execute('ZRANGEBYLEX', *args)
+            return self.execute(u'ZRANGEBYLEX', *args, shard_key=args[0])
+        return self.execute(u'ZRANGEBYLEX', *args)
 
     def zrangebyscore(self, *args):
-        """ Execute ZRANGEBYSCORE Command, consult Redis documentation for details.
+        u""" Execute ZRANGEBYSCORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZRANGEBYSCORE', *args, shard_key=args[0])
-        return self.execute('ZRANGEBYSCORE', *args)
+            return self.execute(u'ZRANGEBYSCORE', *args, shard_key=args[0])
+        return self.execute(u'ZRANGEBYSCORE', *args)
 
     def zrank(self, *args):
-        """ Execute ZRANK Command, consult Redis documentation for details.
+        u""" Execute ZRANK Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZRANK', *args, shard_key=args[0])
-        return self.execute('ZRANK', *args)
+            return self.execute(u'ZRANK', *args, shard_key=args[0])
+        return self.execute(u'ZRANK', *args)
 
     def zrem(self, *args):
-        """ Execute ZREM Command, consult Redis documentation for details.
+        u""" Execute ZREM Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREM', *args, shard_key=args[0])
-        return self.execute('ZREM', *args)
+            return self.execute(u'ZREM', *args, shard_key=args[0])
+        return self.execute(u'ZREM', *args)
 
     def zremrangebylex(self, *args):
-        """ Execute ZREMRANGEBYLEX Command, consult Redis documentation for details.
+        u""" Execute ZREMRANGEBYLEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREMRANGEBYLEX', *args, shard_key=args[0])
-        return self.execute('ZREMRANGEBYLEX', *args)
+            return self.execute(u'ZREMRANGEBYLEX', *args, shard_key=args[0])
+        return self.execute(u'ZREMRANGEBYLEX', *args)
 
     def zremrangebyrank(self, *args):
-        """ Execute ZREMRANGEBYRANK Command, consult Redis documentation for details.
+        u""" Execute ZREMRANGEBYRANK Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREMRANGEBYRANK', *args, shard_key=args[0])
-        return self.execute('ZREMRANGEBYRANK', *args)
+            return self.execute(u'ZREMRANGEBYRANK', *args, shard_key=args[0])
+        return self.execute(u'ZREMRANGEBYRANK', *args)
 
     def zremrangebyscrore(self, *args):
-        """ Execute ZREMRANGEBYSCORE Command, consult Redis documentation for details.
+        u""" Execute ZREMRANGEBYSCORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREMRANGEBYSCORE', *args, shard_key=args[0])
-        return self.execute('ZREMRANGEBYSCORE', *args)
+            return self.execute(u'ZREMRANGEBYSCORE', *args, shard_key=args[0])
+        return self.execute(u'ZREMRANGEBYSCORE', *args)
 
     def zrevrange(self, *args):
-        """ Execute ZREVRANGE Command, consult Redis documentation for details.
+        u""" Execute ZREVRANGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREVRANGE', *args, shard_key=args[0])
-        return self.execute('ZREVRANGE', *args)
+            return self.execute(u'ZREVRANGE', *args, shard_key=args[0])
+        return self.execute(u'ZREVRANGE', *args)
 
     def zrevrangebylex(self, *args):
-        """ Execute ZREVRANGEBYLEX Command, consult Redis documentation for details.
+        u""" Execute ZREVRANGEBYLEX Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREVRANGEBYLEX', *args, shard_key=args[0])
-        return self.execute('ZREVRANGEBYLEX', *args)
+            return self.execute(u'ZREVRANGEBYLEX', *args, shard_key=args[0])
+        return self.execute(u'ZREVRANGEBYLEX', *args)
 
     def zrevrangebyscore(self, *args):
-        """ Execute ZREVRANGEBYSCORE Command, consult Redis documentation for details.
+        u""" Execute ZREVRANGEBYSCORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREVRANGEBYSCORE', *args, shard_key=args[0])
-        return self.execute('ZREVRANGEBYSCORE', *args)
+            return self.execute(u'ZREVRANGEBYSCORE', *args, shard_key=args[0])
+        return self.execute(u'ZREVRANGEBYSCORE', *args)
 
     def zrevrank(self, *args):
-        """ Execute ZREVRANK Command, consult Redis documentation for details.
+        u""" Execute ZREVRANK Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZREVRANK', *args, shard_key=args[0])
-        return self.execute('ZREVRANK', *args)
+            return self.execute(u'ZREVRANK', *args, shard_key=args[0])
+        return self.execute(u'ZREVRANK', *args)
 
     def zscore(self, *args):
-        """ Execute ZSCORE Command, consult Redis documentation for details.
+        u""" Execute ZSCORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZSCORE', *args, shard_key=args[0])
-        return self.execute('ZSCORE', *args)
+            return self.execute(u'ZSCORE', *args, shard_key=args[0])
+        return self.execute(u'ZSCORE', *args)
 
     def zunionstore(self, *args):
-        """ Execute ZUNIONSTORE Command, consult Redis documentation for details.
+        u""" Execute ZUNIONSTORE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZUNIONSTORE', *args, shard_key=args[0])
-        return self.execute('ZUNIONSTORE', *args)
+            return self.execute(u'ZUNIONSTORE', *args, shard_key=args[0])
+        return self.execute(u'ZUNIONSTORE', *args)
 
     def zscan(self, *args):
-        """ Execute ZSCAN Command, consult Redis documentation for details.
+        u""" Execute ZSCAN Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('ZSCAN', *args, shard_key=args[0])
-        return self.execute('ZSCAN', *args)
+            return self.execute(u'ZSCAN', *args, shard_key=args[0])
+        return self.execute(u'ZSCAN', *args)
 
 
 class HyperLogLog(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(HyperLogLog, self).__init__()
 
     def pfadd(self, *args):
-        """ Execute PFADD Command, consult Redis documentation for details.
+        u""" Execute PFADD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PFADD', *args, shard_key=args[0])
-        return self.execute('PFADD', *args)
+            return self.execute(u'PFADD', *args, shard_key=args[0])
+        return self.execute(u'PFADD', *args)
 
     def pfcount(self, *args):
-        """ Execute PFCOUNT Command, consult Redis documentation for details.
+        u""" Execute PFCOUNT Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PFCOUNT', *args, shard_key=args[0])
-        return self.execute('PFCOUNT', *args)
+            return self.execute(u'PFCOUNT', *args, shard_key=args[0])
+        return self.execute(u'PFCOUNT', *args)
 
     def pfmerge(self, *args):
-        """ Execute PFMERGE Command, consult Redis documentation for details.
+        u""" Execute PFMERGE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('PFMERGE', *args, shard_key=args[0])
-        return self.execute('PFMERGE', *args)
+            return self.execute(u'PFMERGE', *args, shard_key=args[0])
+        return self.execute(u'PFMERGE', *args)
 
 
 class Publish(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Publish, self).__init__()
 
     def publish(self, *args):
-        """ Execute PUBLISH Command, consult Redis documentation for details.
+        u""" Execute PUBLISH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
             raise NotImplemented
-        return self.execute('PUBLISH', *args)
+        return self.execute(u'PUBLISH', *args)
 
 
 class Subscribe(object):
@@ -1303,114 +1303,90 @@ class Subscribe(object):
         raise NotImplemented
 
     def psubscribe(self, *args):
-        """ Execute PSUBSCRIBE Command, consult Redis documentation for details.
+        u""" Execute PSUBSCRIBE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
-        return self.write('PSUBSCRIBE', *args)
+        return self.write(u'PSUBSCRIBE', *args)
 
     def punsubscribe(self, *args):
-        """ Execute PUNSUBSCRIBE Command, consult Redis documentation for details.
+        u""" Execute PUNSUBSCRIBE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
-        return self.write('PUNSUBSCRIBE', *args)
+        return self.write(u'PUNSUBSCRIBE', *args)
 
     def subscribe(self, *args):
-        """ Execute SUBSCRIBE Command, consult Redis documentation for details.
+        u""" Execute SUBSCRIBE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
-        return self.write('SUBSCRIBE', *args)
+        return self.write(u'SUBSCRIBE', *args)
 
     def unsubscribe(self, *args):
-        """ Execute UNSUBSCRIBE Command, consult Redis documentation for details.
+        u""" Execute UNSUBSCRIBE Command, consult Redis documentation for details.
 
         :return: result, exception
         """
-        return self.write('UNSUBSCRIBE', *args)
+        return self.write(u'UNSUBSCRIBE', *args)
 
 
 class Transaction(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Transaction, self).__init__()
 
-    def discard(self, *args, shard_key=None, sock=None):
-        """ Execute DISCARD Command, consult Redis documentation for details.
-
-        :return: result, exception
-        """
-        if self._cluster:
-            return self.execute('DISCARD', *args, shard_key=shard_key, sock=sock)
-        return self.execute('DISCARD', *args)
-
-    def exec(self, *args, shard_key=None, sock=None):
-        """ Execute EXEC Command, consult Redis documentation for details.
+    def discard(self, *args):
+        u""" Execute DISCARD Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('EXEC', *args, shard_key=shard_key, sock=sock)
-        return self.execute('EXEC', *args)
+            return self.execute(u'DISCARD', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'DISCARD', *args)
 
-    def multi(self, *args, shard_key=None, sock=None):
-        """ Execute MULTI Command, consult Redis documentation for details.
-
-        :return: result, exception
-        """
-        if self._cluster:
-            return self.execute('MULTI', *args, shard_key=shard_key, sock=sock)
-        return self.execute('MULTI', *args)
-
-    def unwatch(self, *args, shard_key=None, sock=None):
-        """ Execute UNWATCH Command, consult Redis documentation for details.
+    def Exec(self, *args):
+        u""" Execute EXEC Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('UNWATCH', *args, shard_key=shard_key, sock=sock)
-        return self.execute('UNWATCH', *args)
+            return self.execute(u'EXEC', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'EXEC', *args)
+
+    def multi(self, *args):
+        u""" Execute MULTI Command, consult Redis documentation for details.
+
+        :return: result, exception
+        """
+        if self._cluster:
+            return self.execute(u'MULTI', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'MULTI', *args)
+
+    def unwatch(self, *args):
+        u""" Execute UNWATCH Command, consult Redis documentation for details.
+
+        :return: result, exception
+        """
+        if self._cluster:
+            return self.execute(u'UNWATCH', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'UNWATCH', *args)
 
     def watch(self, *args):
-        """ Execute WATCH Command, consult Redis documentation for details.
+        u""" Execute WATCH Command, consult Redis documentation for details.
 
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('WATCH', *args, shard_key=args[0])
-        return self.execute('WATCH', *args)
+            return self.execute(u'WATCH', *args, shard_key=args[0])
+        return self.execute(u'WATCH', *args)
 
 
 class Scripting(BaseCommand):
     def __init__(self):
-        super().__init__()
+        super(Scripting, self).__init__()
 
-    def eval(self, *args, shard_key=None, sock=None):
-        """ Execute EVAL Command, consult Redis documentation for details.
-
-        :param shard_key: (optional)
-            Should be set to the key name you try to work with.
-            Can not be used if sock is set.
-
-            Only used if used with a Cluster Client
-        :type shard_key: string
-
-        :param sock: (optional)
-            The string representation of a socket, the command should be executed against.
-            For example: "testhost_6379"
-            Can not be used if shard_key is set.
-
-            Only used if used with a Cluster Client
-        :type sock: string
-
-        :return: result, exception
-        """
-        if self._cluster:
-            return self.execute('EVAL', *args, shard_key=shard_key, sock=sock)
-        return self.execute('EVAL', *args)
-
-    def evalsha(self, *args, shard_key=None, sock=None):
-        """ Execute EVALSHA Command, consult Redis documentation for details.
+    def eval(self, *args):
+        u""" Execute EVAL Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -1430,35 +1406,11 @@ class Scripting(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('EVALSHA', *args, shard_key=shard_key, sock=sock)
-        return self.execute('EVALSHA', *args)
+            return self.execute(u'EVAL', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'EVAL', *args)
 
-    def script_debug(self, *args, shard_key=None, sock=None):
-        """ Execute SCRIPT DEBUG Command, consult Redis documentation for details.
-
-        :param shard_key: (optional)
-            Should be set to the key name you try to work with.
-            Can not be used if sock is set.
-
-            Only used if used with a Cluster Client
-        :type shard_key: string
-
-        :param sock: (optional)
-            The string representation of a socket, the command should be executed against.
-            For example: "testhost_6379"
-            Can not be used if shard_key is set.
-
-            Only used if used with a Cluster Client
-        :type sock: string
-
-        :return: result, exception
-        """
-        if self._cluster:
-            return self.execute('SCRIPT', 'DEBUG', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCRIPT', 'DEBUG', *args)
-
-    def script_exists(self, *args, shard_key=None, sock=None):
-        """ Execute SCRIPT EXISTS Command, consult Redis documentation for details.
+    def evalsha(self, *args):
+        u""" Execute EVALSHA Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -1478,35 +1430,11 @@ class Scripting(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SCRIPT', 'EXISTS', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCRIPT', 'EXISTS', *args)
+            return self.execute(u'EVALSHA', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'EVALSHA', *args)
 
-    def script_flush(self, *args, shard_key=None, sock=None):
-        """ Execute SCRIPT FLUSH Command, consult Redis documentation for details.
-
-        :param shard_key: (optional)
-            Should be set to the key name you try to work with.
-            Can not be used if sock is set.
-
-            Only used if used with a Cluster Client
-        :type shard_key: string
-
-        :param sock: (optional)
-            The string representation of a socket, the command should be executed against.
-            For example: "testhost_6379"
-            Can not be used if shard_key is set.
-
-            Only used if used with a Cluster Client
-        :type sock: string
-
-        :return: result, exception
-        """
-        if self._cluster:
-            return self.execute('SCRIPT', 'FLUSH', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCRIPT', 'FLUSH', *args)
-
-    def script_kill(self, *args, shard_key=None, sock=None):
-        """ Execute SCRIPT KILL Command, consult Redis documentation for details.
+    def script_debug(self, *args):
+        u""" Execute SCRIPT DEBUG Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -1526,11 +1454,11 @@ class Scripting(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SCRIPT', 'KILL', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCRIPT', 'KILL', *args)
+            return self.execute(u'SCRIPT', u'DEBUG', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCRIPT', u'DEBUG', *args)
 
-    def script_load(self, *args, shard_key=None, sock=None):
-        """ Execute SCRIPT LOAD Command, consult Redis documentation for details.
+    def script_exists(self, *args):
+        u""" Execute SCRIPT EXISTS Command, consult Redis documentation for details.
 
         :param shard_key: (optional)
             Should be set to the key name you try to work with.
@@ -1550,5 +1478,77 @@ class Scripting(BaseCommand):
         :return: result, exception
         """
         if self._cluster:
-            return self.execute('SCRIPT', 'LOAD', *args, shard_key=shard_key, sock=sock)
-        return self.execute('SCRIPT', 'LOAD', *args)
+            return self.execute(u'SCRIPT', u'EXISTS', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCRIPT', u'EXISTS', *args)
+
+    def script_flush(self, *args):
+        u""" Execute SCRIPT FLUSH Command, consult Redis documentation for details.
+
+        :param shard_key: (optional)
+            Should be set to the key name you try to work with.
+            Can not be used if sock is set.
+
+            Only used if used with a Cluster Client
+        :type shard_key: string
+
+        :param sock: (optional)
+            The string representation of a socket, the command should be executed against.
+            For example: "testhost_6379"
+            Can not be used if shard_key is set.
+
+            Only used if used with a Cluster Client
+        :type sock: string
+
+        :return: result, exception
+        """
+        if self._cluster:
+            return self.execute(u'SCRIPT', u'FLUSH', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCRIPT', u'FLUSH', *args)
+
+    def script_kill(self, *args):
+        u""" Execute SCRIPT KILL Command, consult Redis documentation for details.
+
+        :param shard_key: (optional)
+            Should be set to the key name you try to work with.
+            Can not be used if sock is set.
+
+            Only used if used with a Cluster Client
+        :type shard_key: string
+
+        :param sock: (optional)
+            The string representation of a socket, the command should be executed against.
+            For example: "testhost_6379"
+            Can not be used if shard_key is set.
+
+            Only used if used with a Cluster Client
+        :type sock: string
+
+        :return: result, exception
+        """
+        if self._cluster:
+            return self.execute(u'SCRIPT', u'KILL', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCRIPT', u'KILL', *args)
+
+    def script_load(self, *args):
+        u""" Execute SCRIPT LOAD Command, consult Redis documentation for details.
+
+        :param shard_key: (optional)
+            Should be set to the key name you try to work with.
+            Can not be used if sock is set.
+
+            Only used if used with a Cluster Client
+        :type shard_key: string
+
+        :param sock: (optional)
+            The string representation of a socket, the command should be executed against.
+            For example: "testhost_6379"
+            Can not be used if shard_key is set.
+
+            Only used if used with a Cluster Client
+        :type sock: string
+
+        :return: result, exception
+        """
+        if self._cluster:
+            return self.execute(u'SCRIPT', u'LOAD', *args, shard_key=shard_key, sock=sock)
+        return self.execute(u'SCRIPT', u'LOAD', *args)
