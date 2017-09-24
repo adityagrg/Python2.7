@@ -277,7 +277,7 @@ class TestWriter(TestCase):
     def test_encode_3_args(self):
         expected = '*3\r\n$3\r\nSET\r\n$8\r\nKey/Name\r\n$19\r\nSomeValue_?#!\xc3\x84\xc3\x9c\xc3\x96\r\n'
         self.assertEqual(
-            writer(u'SET', u'Key/Name', u'SomeValue_?#!AUO'),
+            writer(u'SET', u'Key/Name', u'SomeValue_?#!äüö'),
             expected)
 
 
@@ -294,7 +294,7 @@ class TestToBytes(TestCase):
 
     def test_str(self):
         expected = '\xc3\xbc\xc3\x9f_blarg'
-        result = to_bytes(u'uB_blarg')
+        result = to_bytes(u'üß_blarg')
         self.assertEqual(result, expected)
 
     def test_bytes(self):
