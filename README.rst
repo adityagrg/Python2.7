@@ -1,7 +1,6 @@
 Introduction
 ************
-Redis Client implementation for Python. The Client only supports Python 3 for the moment.
-If there is enough interest, i will make it work with Python 2.
+Redis Client implementation for Python. The Client supports Python 2. Implementation of Python 3 already exists https://github.com/schlitzered/pyredis .
 
 Currently implemented Features:
   - Base Redis Client
@@ -32,18 +31,12 @@ pyredis can be installed via pip as follows:
 Author
 ------
 
-Stephan Schultchen <stephan.schultchen@gmail.com>
+Aditya Garg <adityagrg097@gmail.com>
 
 License
 -------
 
 Unless stated otherwise on-file pyredis uses the MIT license,
 check LICENSE file.
-
-Contributing
-------------
-
-If you'd like to contribute, fork the project, make a patch and send a pull
-request.
 
 
