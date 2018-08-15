@@ -1,4 +1,4 @@
-__author__ = u'schlitzer'
+__author__ = u'adityagrg'
 
 u"""
 Redis Client implementation for Python 3.
