@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-__author__ = u'schlitzer'
+__author__ = u'adityagrg'
 
 from collections import deque
 from unittest import TestCase
