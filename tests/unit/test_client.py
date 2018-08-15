@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from itertools import imap
-__author__ = u'schlitzer'
+__author__ = u'adityagrg'
 
 from unittest import TestCase
 from unittest.mock import Mock, MagicMock, PropertyMock, call, patch
