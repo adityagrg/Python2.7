@@ -8,15 +8,15 @@ setup(
     long_description=u"""
 Redis Client implementation for Python 3.
 
-Copyright (c) 2016, Stephan Schultchen.
+Copyright (c) 2018, Aditya Garg.
 
 License: MIT (see LICENSE for details)
     """,
     packages=[u'pyredis'],
-    url=u'https://github.com/schlitzered/pyredis',
+    url=u'https://github.com/adityagrg/pyredis-Python2',
     license=u'MIT',
-    author=u'schlitzer',
-    author_email=u'stephan.schultchen@gmail.com',
+    author=u'adityagrg',
+    author_email=u'adityagrg097@gmail.com',
     test_suite=u'test',
     platforms=u'posix',
     classifiers=[
